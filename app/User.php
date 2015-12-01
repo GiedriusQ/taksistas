@@ -91,7 +91,7 @@ class User extends Model implements AuthenticatableContract,
 
     public function statuses()
     {
-        return $this->hasMany('App\StatsHistory');
+        return $this->hasMany('App\StatusHistory');
     }
 
     public function profile()
