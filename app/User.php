@@ -57,14 +57,14 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = ['password', 'email', 'type', 'name', 'city'];
 
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password', 'remember_token', 'created_at', 'updated_at', 'deleted_at', 'id'];
 
     public $timestamps = false;
 
@@ -89,13 +89,21 @@ class User extends Model implements AuthenticatableContract,
         return $this->hasMany('App\DriverLocation', 'driver_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function statuses()
     {
         return $this->hasMany('App\StatusHistory');
     }
 
-    public function profile()
+    public function isAdmin()
     {
-        return $this->hasOne('App\Profile');
+        return $this->type == 0;
+    }
+
+    public function owns($id)
+    {
+        return $this->drivers()->whereId($id)->exists() || $this->dispatcher()->whereId($id)->exists() || $this->isAdmin() || $this->id == $id;
     }
 }

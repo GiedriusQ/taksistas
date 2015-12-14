@@ -18,6 +18,8 @@ class CreateUsersTable extends Migration
             $table->foreign('parent_id')->references('id')->on('users');
             $table->tinyInteger('type')->unsigned()->default(0);
             $table->string('email')->unique();
+            $table->string('name', 60);
+            $table->string('city', 60);
             $table->string('password', 60);
             $table->rememberToken();
             $table->timestamps();

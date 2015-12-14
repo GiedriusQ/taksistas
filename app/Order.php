@@ -36,6 +36,13 @@ use Illuminate\Support\Facades\Config;
  */
 class Order extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['from', 'to', 'client', 'driver_id'];
+
     public function dispatcher()
     {
         return $this->belongsTo('App\User', 'dispatcher_id');
@@ -46,8 +53,14 @@ class Order extends Model
         return $this->belongsTo('App\User', 'driver_id');
     }
 
-    public function getStatusStrAttribute()
+    /**
+     * @param float $test Encoding.
+     * @return mixed
+     */
+    public function getStatusStrAttribute($test)
     {
+        $this->getStatusStrAttribute("s");
+
         return Config::get('statuses.' . $this->status);
     }
 }

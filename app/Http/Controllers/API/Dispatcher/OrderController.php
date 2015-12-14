@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\API\Dispatcher;
 
+use App\Order;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Auth;
 
 class OrderController extends Controller
 {
@@ -16,7 +18,9 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $orders = Auth::user()->orders;
+
+        return response()->json($orders);
     }
 
     /**
@@ -27,7 +31,19 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'driver_id' => 'sometimes|exists:users,id,type,2',
+            'from'      => 'required|max:150',
+            'to'        => 'required|max:150',
+            'client'    => 'required|max:100'
+        ];
+        $this->validate($request, $rules);
+        $order = Order::create($request->only(['from','to','client']));
+        Auth::user()->orders()->associate($order);
+
+        //gmaps, bing magija  from/to -> lat lng
+
+        return response()->json($order);
     }
 
     /**
@@ -38,7 +54,9 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        //
+        $order = Order::with(['driver', 'status_history'])->findOrFail($id);
+
+        return response()->json($order);
     }
 
     /**

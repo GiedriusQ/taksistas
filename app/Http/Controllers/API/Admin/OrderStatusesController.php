@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Front;
+namespace App\Http\Controllers\API\Admin;
 
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class ProfileController extends Controller
+class OrderStatusesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,6 +15,16 @@ class ProfileController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
         //
     }
@@ -42,6 +52,17 @@ class ProfileController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
@@ -62,5 +83,9 @@ class ProfileController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function driverOrderStatuses($id)
+    {
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Order;
+use App\User;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -19,20 +21,30 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define your route model bindings, pattern filters, etc.
      *
-     * @param  \Illuminate\Routing\Router  $router
+     * @param  \Illuminate\Routing\Router $router
      * @return void
      */
     public function boot(Router $router)
     {
-        //
-
         parent::boot($router);
+
+        $router->bind('admin', function ($id) {
+            return User::with(['profile'])->findOrFail($id);
+        });
+        $router->bind('dispatcher', function ($id) {
+            return User::with(['drivers.profile', 'profile'])->findOrFail($id);
+        });
+        $router->bind('driver', function ($id) {
+            return User::with(['dispatcher.profile', 'profile'])->findOrFail($id);
+        });
+//        $router->model('user', User::class);
+//        $router->model('order', Order::class);
     }
 
     /**
      * Define the routes for the application.
      *
-     * @param  \Illuminate\Routing\Router  $router
+     * @param  \Illuminate\Routing\Router $router
      * @return void
      */
     public function map(Router $router)
