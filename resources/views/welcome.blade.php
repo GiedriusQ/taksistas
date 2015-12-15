@@ -4,7 +4,7 @@
     <title>Laravel</title>
 
     <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="{{asset('js/jquery.js')}}"></script>
+    <script type="text/javascript" src="{{asset('js/libs.js')}}"></script>
     <style>
         html, body {
             height: 100%;
@@ -47,9 +47,9 @@
             $.ajax({
                 type      : "POST",
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader ("Authorization", "Basic " + btoa('pHermann@Steuber.com' + ":" + 'test123'));
+                    xhr.setRequestHeader ("Authorization", "Basic " + btoa('Rosendo76@Rolfson.info' + ":" + '123456'));
                 },
-                url       : '{{url('api/dispatcher/user')}}',
+                url       : '{{url('api/admin/users/admins')}}',
                 data      : {},
                 success   : function (data) {
                     console.log(data);

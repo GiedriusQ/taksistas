@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
-use App\Http\Requests\Request;
+use App\Http\Requests\CustomResponse;
 use Illuminate\Auth\AuthManager;
 
-class UserUpdateRequest extends Request
+class UpdateUserRequest extends CustomResponse
 {
     private $id;
 
@@ -17,7 +17,8 @@ class UserUpdateRequest extends Request
      */
     public function authorize(AuthManager $auth)
     {
-        $this->id = $this->route('user');
+        $this->id = $this->route('users') ? : ($this->route('drivers') ? : ($this->route('dispatchers') ? : $this->route('admins')));
+        dd($this->id);
 
         return $auth->user()->owns($this->id);
     }

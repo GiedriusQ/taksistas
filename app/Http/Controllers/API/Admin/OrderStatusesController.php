@@ -2,90 +2,56 @@
 
 namespace App\Http\Controllers\API\Admin;
 
-use Illuminate\Http\Request;
-
+use App\User;
+use App\Order;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\GK\Json\JsonRespond;
+use App\Http\Controllers\ApiController;
+use App\GK\Transformers\StatusTransformer;
 
-class OrderStatusesController extends Controller
+class OrderStatusesController extends ApiController
 {
+    /**
+     * @var StatusTransformer
+     */
+    private $statusTransformer;
+
+    /**
+     * OrderStatusesController constructor.
+     * @param StatusTransformer $statusTransformer
+     * @param JsonRespond $jsonRespond
+     */
+    public function __construct(StatusTransformer $statusTransformer, JsonRespond $jsonRespond)
+    {
+        parent::__construct($jsonRespond);
+        $this->statusTransformer = $statusTransformer;
+        $this->jsonRespond       = $jsonRespond;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Order $order
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Order $order)
     {
-        //
+        $statuses = $order->statusHistory()->paginate(20);
+        $data     = $this->statusTransformer->transformPaginator($statuses);
+
+        return $this->jsonRespond->respondWithPagination($statuses, $data);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param User $driver
+     * @param Order $order
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function driverOrderStatuses(User $driver, Order $order)
     {
-        //
-    }
+        $statuses = $order->statusHistory()->createdByUser($driver)->paginate(20);
+        $data     = $this->statusTransformer->transformPaginator($statuses);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    public function driverOrderStatuses($id)
-    {
+        return $this->jsonRespond->respondWithPagination($statuses, $data);
     }
 }

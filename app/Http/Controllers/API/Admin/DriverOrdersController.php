@@ -2,86 +2,58 @@
 
 namespace App\Http\Controllers\API\Admin;
 
-use Illuminate\Http\Request;
-
+use App\User;
+use App\Order;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\GK\Json\JsonRespond;
+use App\Http\Controllers\ApiController;
+use App\GK\Transformers\OrderTransformer;
 
-class DriverOrdersController extends Controller
+class DriverOrdersController extends ApiController
 {
+    /**
+     * @var OrderTransformer
+     */
+    private $orderTransformer;
+
+    /**
+     * DriverOrdersController constructor.
+     * @param OrderTransformer $orderTransformer
+     * @param JsonRespond $jsonRespond
+     */
+    public function __construct(OrderTransformer $orderTransformer, JsonRespond $jsonRespond)
+    {
+        parent::__construct($jsonRespond);
+        $this->orderTransformer = $orderTransformer;
+        $this->jsonRespond      = $jsonRespond;
+    }
+
     /**
      * Display a listing of the resource.
      *
+     * @param User $driver
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $driver)
     {
-        //
-    }
+        $users = $driver->orders()->paginate(20);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+        $data = $this->orderTransformer->transformPaginator($users);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        return $this->jsonRespond->respondWithPagination($users, $data);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param User $driver
+     * @param Order $order
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $driver, Order $order)
     {
-        //
-    }
+        $data = $this->orderTransformer->transformModel($order);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return $this->jsonRespond->respondWithData($data);
     }
 }

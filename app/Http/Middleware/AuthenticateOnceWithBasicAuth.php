@@ -4,9 +4,22 @@ namespace App\Http\Middleware;
 
 use Auth;
 use Closure;
+use Illuminate\Contracts\Auth\Guard;
 
 class AuthenticateOnceWithBasicAuth
 {
+    protected $auth;
+
+    /**
+     * Create a new middleware instance.
+     *
+     * @param  \Illuminate\Contracts\Auth\Guard $auth
+     */
+    public function __construct(Guard $auth)
+    {
+        $this->auth = $auth;
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -16,7 +29,7 @@ class AuthenticateOnceWithBasicAuth
      */
     public function handle($request, Closure $next)
     {
-        return Auth::onceBasic() ? : $next($request);
+        return $this->auth->onceBasic() ? : $next($request);
     }
 
 }

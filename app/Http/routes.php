@@ -55,13 +55,16 @@
 */
 Route::group(['prefix' => 'api', 'middleware' => 'auth.basic.once'], function () {
     Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
+        Route::get('users/admins', 'API\Admin\UsersController@admins');
+        Route::get('users/drivers', 'API\Admin\UsersController@drivers');
+        Route::get('users/dispatchers', 'API\Admin\UsersController@dispatchers');
+        Route::post('users/admins', 'API\Admin\UsersController@storeAdmins');
+        Route::post('users/dispatchers', 'API\Admin\UsersController@storeDispatchers');
+        Route::resource('users', 'API\Admin\UsersController', ['except' => ['edit', 'create', 'store']]);
         Route::resource('orders', 'API\Admin\OrdersController', ['only' => ['index', 'show']]);
         Route::resource('orders.statuses', 'API\Admin\OrderStatusesController', ['only' => ['index']]);
-        Route::resource('admins', 'API\Admin\AdminsController', ['except' => ['edit', 'create']]);
-        Route::resource('dispatchers', 'API\Admin\DispatchersController', ['except' => ['edit', 'create']]);
         Route::resource('dispatchers.drivers', 'API\Admin\DispatcherDriversController',
             ['except' => ['edit', 'create']]);
-        Route::resource('drivers', 'API\Admin\DriversController', ['except' => ['edit', 'create', 'store']]);
         Route::resource('drivers.orders', 'API\Admin\DriverOrdersController', ['only' => ['index', 'show']]);
         Route::get('drivers/{driver}/orders/{order}/statuses', 'API\Admin\OrderStatusesController@driverOrderStatuses');
     });
@@ -89,9 +92,6 @@ Route::group(['prefix' => 'frontend'], function () {
     });
     Route::group(['middleware' => 'driver', 'prefix' => 'driver'], function () {
         Route::resource('order', 'Front\Driver\OrderController');
-    });
-    Route::group(['middleware' => 'auth.basic'], function () {
-        Route::resource('profile', 'Front\ProfileController');
     });
 });
 Route::get('/', function () {

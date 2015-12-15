@@ -2,86 +2,97 @@
 
 namespace App\Http\Controllers\API\Admin;
 
-use Illuminate\Http\Request;
-
+use App\User;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\GK\Json\JsonRespond;
+use App\Http\Controllers\ApiController;
+use App\GK\Transformers\UserTransformer;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
 
-class DispatcherDriversController extends Controller
+class DispatcherDriversController extends ApiController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var UserTransformer
      */
-    public function index()
+    private $userTransformer;
+
+    /**
+     * DispatcherDriversController constructor.
+     * @param UserTransformer $userTransformer
+     * @param JsonRespond $jsonRespond
+     */
+    public function __construct(UserTransformer $userTransformer, JsonRespond $jsonRespond)
     {
-        //
+        parent::__construct($jsonRespond);
+        $this->jsonRespond     = $jsonRespond;
+        $this->userTransformer = $userTransformer;
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      *
+     * @param User $dispatcher
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function index(User $dispatcher)
     {
-        //
+        $drivers = $dispatcher->drivers()->paginate(20);
+
+        return $this->respondUserPaginator($this->userTransformer, $drivers);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param StoreUserRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request, User $dispatcher)
     {
-        //
+        $driver = $dispatcher->createDriverForDispatcher($request->all());
+
+        return $this->respondUserModel($this->userTransformer, $driver);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param User $dispatcher
+     * @param User $driver
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $dispatcher, User $driver)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return $this->respondUserModel($this->userTransformer, $driver);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param UpdateUserRequest $request
+     * @param User $dispatcher
+     * @param User $driver
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, User $dispatcher, User $driver)
     {
-        //
+        $driver->update($request->all());
+
+        return $this->respondUserModel($this->userTransformer, $driver);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param User $driver
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy(User $driver)
     {
-        //
+        $driver->delete();
+
+        return $this->jsonRespond->respondDelete();
     }
 }

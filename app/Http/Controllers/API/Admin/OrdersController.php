@@ -3,13 +3,29 @@
 namespace App\Http\Controllers\API\Admin;
 
 use App\Order;
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\GK\Json\JsonRespond;
+use App\Http\Controllers\ApiController;
+use App\GK\Transformers\OrderTransformer;
 
-class OrdersController extends Controller
+class OrdersController extends ApiController
 {
+    protected $orderTransformer;
+    protected $orders;
+
+    /**
+     * AdminsController constructor.
+     * @param Order $orders
+     * @param JsonRespond $jsonRespond
+     * @param OrderTransformer $userTransformer
+     */
+    public function __construct(Order $orders, JsonRespond $jsonRespond, OrderTransformer $userTransformer)
+    {
+        $this->orderTransformer = $userTransformer;
+        $this->orders           = $orders;
+        parent::__construct($jsonRespond);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,21 +33,22 @@ class OrdersController extends Controller
      */
     public function index()
     {
-        $orders = Order::all();
+        $orders = $this->orders->paginate(20);
+        $data   = $this->orderTransformer->transformPaginator($orders);
 
-        return response()->json(['orders' => $orders]);
+        return $this->jsonRespond->respondWithPagination($orders, $data);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param Order $order
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Order $order)
     {
-        $order = Order::with('status_history')->find($id);
+        $data = $this->orderTransformer->transformModel($order);
 
-        return response()->json(['order' => $order]);
+        return $this->jsonRespond->respondWithData($data);
     }
 }

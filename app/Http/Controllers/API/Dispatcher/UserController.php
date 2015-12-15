@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\API\Dispatcher;
 
+use App\Http\Controllers\ApiController;
 use App\User;
 use Auth;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     /**
      * Display a listing of the resource.

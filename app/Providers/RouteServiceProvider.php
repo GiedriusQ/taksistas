@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
-use App\Order;
 use App\User;
+use App\Order;
+use Exception;
 use Illuminate\Routing\Router;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
@@ -28,17 +30,19 @@ class RouteServiceProvider extends ServiceProvider
     {
         parent::boot($router);
 
-        $router->bind('admin', function ($id) {
-            return User::with(['profile'])->findOrFail($id);
+        $throwModelNotFound = function () {
+            throw new ModelNotFoundException;
+        };
+        $router->model('admins', User::class, $throwModelNotFound);
+        $router->model('dispatchers', User::class, $throwModelNotFound);
+        $router->model('drivers', User::class, $throwModelNotFound);
+        $router->bind('orders', function ($id) {
+            try {
+                return Order::with('statusHistory')->find($id);
+            } catch (Exception $e) {
+                $this->throwModelNotFound();
+            }
         });
-        $router->bind('dispatcher', function ($id) {
-            return User::with(['drivers.profile', 'profile'])->findOrFail($id);
-        });
-        $router->bind('driver', function ($id) {
-            return User::with(['dispatcher.profile', 'profile'])->findOrFail($id);
-        });
-//        $router->model('user', User::class);
-//        $router->model('order', Order::class);
     }
 
     /**
@@ -52,5 +56,10 @@ class RouteServiceProvider extends ServiceProvider
         $router->group(['namespace' => $this->namespace], function ($router) {
             require app_path('Http/routes.php');
         });
+    }
+
+    protected function throwModelNotFound()
+    {
+        throw new ModelNotFoundException;
     }
 }

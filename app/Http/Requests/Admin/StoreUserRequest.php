@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
-use App\Http\Requests\Request;
+use App\Http\Requests\CustomResponse;
 use Illuminate\Auth\AuthManager;
 
-class UserStoreRequest extends Request
+class StoreUserRequest extends CustomResponse
 {
     /**
      * Determine if the user is authorized to make this request.

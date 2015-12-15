@@ -26,6 +26,11 @@ use Illuminate\Support\Facades\Config;
  */
 class StatusHistory extends Model
 {
+    use StatusAndDate;
+    protected $fillable = ['status'];
+    protected $hidden = ['id', 'updated_at', 'user_id', 'order_id'];
+    protected $appends = ['status_str', 'added_at', 'created_at_readable'];
+
     public function order()
     {
         return $this->belongsTo('App\Order');
@@ -39,5 +44,10 @@ class StatusHistory extends Model
     public function getStatusStrAttribute()
     {
         return Config::get('statuses.' . $this->status);
+    }
+
+    public function scopeCreateByUser($query, $user)
+    {
+        $query->whereUserId($user instanceof User ? $user->id : $user);
     }
 }
