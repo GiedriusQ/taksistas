@@ -21,8 +21,8 @@ class CreateOrdersTable extends Migration
             $table->string('from', 150);
             $table->string('to', 150);
             $table->string('client', 100);
-            $table->decimal('lat', 11, 8);
-            $table->decimal('lng', 11, 8);
+            $table->decimal('lat', 11, 8)->default(0);
+            $table->decimal('lng', 11, 8)->default(0);
             $table->decimal('destination_lat', 11, 8)->default(0);
             $table->decimal('destination_lng', 11, 8)->default(0);
             $table->tinyInteger('status')->unsigned()->default(0);

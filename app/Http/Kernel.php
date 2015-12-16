@@ -32,5 +32,11 @@ class Kernel extends HttpKernel
         'driver'          => \App\Http\Middleware\DriverMiddleware::class,
         'dispatcher'      => \App\Http\Middleware\DispatcherMiddleware::class,
         'guest'           => \App\Http\Middleware\RedirectIfAuthenticated::class,
+
+        'frontend.auth'       => \App\Http\Middleware\Frontend\ApiAuthentication::class,
+        'frontend.admin'      => \App\Http\Middleware\Frontend\AdminMiddleware::class,
+        'frontend.dispatcher' => \App\Http\Middleware\Frontend\DispatcherMiddleware::class,
+        'frontend.driver'     => \App\Http\Middleware\Frontend\DriverMiddleware::class,
+        'frontend.guest'      => \App\Http\Middleware\Frontend\RedirectIfAuthenticated::class,
     ];
 }

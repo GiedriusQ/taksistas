@@ -2,25 +2,25 @@
 
 @section('content')
     <div class="jumbotron">
-        <form method="POST" action="{{action('Auth\AuthController@postLogin')}}">
+        <form method="POST" action="{{action('Front\LoginController@postLogin')}}">
             {!! csrf_field() !!}
 
-            <div>
+            <div class="form-group">
                 Email
-                <input type="email" name="email" value="{{ old('email') }}">
+                <input type="email" class="form-control" name="email" value="{{ old('email') }}">
             </div>
 
-            <div>
+            <div class="form-group">
                 Password
-                <input type="password" name="password" id="password">
+                <input type="password" class="form-control" name="password" id="password">
             </div>
 
-            <div>
+            <div class="form-group">
                 <input type="checkbox" name="remember"> Remember Me
             </div>
 
-            <div>
-                <button type="submit">Login</button>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Login</button>
             </div>
         </form>
     </div>

@@ -17,8 +17,7 @@ class UpdateUserRequest extends CustomResponse
      */
     public function authorize(AuthManager $auth)
     {
-        $this->id = $this->route('users') ? : ($this->route('drivers') ? : ($this->route('dispatchers') ? : $this->route('admins')));
-        dd($this->id);
+        $this->id = $this->route('users')->id ? : ($this->route('drivers')->id ? : ($this->route('dispatchers')->id ? : $this->route('admins')->id));
 
         return $auth->user()->owns($this->id);
     }

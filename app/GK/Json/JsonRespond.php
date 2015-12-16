@@ -2,6 +2,7 @@
 
 namespace App\GK\Json;
 
+use App\GK\Transformers\Transformer;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class JsonRespond
@@ -110,7 +111,7 @@ class JsonRespond
      * @param $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function respondStore($data)
+    private function respondStore($data)
     {
         return $this->respond([
             'data'        => $data,
@@ -124,18 +125,36 @@ class JsonRespond
      * @param $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function respondWithPagination(LengthAwarePaginator $paginator, $data)
+    protected function respondWithPagination(LengthAwarePaginator $paginator, $data)
     {
         $paginatorArray = $paginator->toArray();
         unset($paginatorArray['data']);
         $data = [
-            'paginator' =>
-                [
-                    $paginatorArray
-                ],
+            'paginator' => $paginatorArray,
             'data'      => $data
         ];
 
         return $this->respond($data);
+    }
+
+    public function respondPaginator(Transformer $transformer, $items)
+    {
+        $data = $transformer->transformPaginator($items);
+
+        return $this->respondWithPagination($items, $data);
+    }
+
+    public function respondModel(Transformer $transformer, $item)
+    {
+        $data = $transformer->transformModel($item);
+
+        return $this->respondWithData($data);
+    }
+
+    public function respondModelStore(Transformer $transformer, $item)
+    {
+        $data = $transformer->transformModel($item);
+
+        return $this->setStatusCode(201)->respondStore($data);
     }
 }

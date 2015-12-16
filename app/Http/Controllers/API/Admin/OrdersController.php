@@ -34,9 +34,8 @@ class OrdersController extends ApiController
     public function index()
     {
         $orders = $this->orders->paginate(20);
-        $data   = $this->orderTransformer->transformPaginator($orders);
 
-        return $this->jsonRespond->respondWithPagination($orders, $data);
+        return $this->jsonRespond->respondPaginator($this->orderTransformer, $orders);
     }
 
     /**

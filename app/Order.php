@@ -39,6 +39,10 @@ use Illuminate\Support\Facades\Config;
  * @method static \Illuminate\Database\Query\Builder|\App\Order whereFrom($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Order whereTo($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Order whereClient($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\StatusHistory[] $statusHistory
+ * @property-read mixed $added_at
+ * @property-read mixed $created_at_readable
+ * @method static \Illuminate\Database\Query\Builder|\App\Order assignedToDriver($driver)
  */
 class Order extends Model
 {
@@ -68,9 +72,19 @@ class Order extends Model
     {
         return $this->hasMany('App\StatusHistory')->latest();
     }
+
     public function scopeAssignedToDriver($query, $driver)
     {
         $query->whereDriverId($driver instanceof User ? $driver->id : $driver);
+    }
+
+    public function setStatus($user, $status)
+    {
+        $user_id      = $user instanceof Model ? $user->id : $user;
+        $this->status = $status;
+        $this->save();
+
+        return $this->statusHistory()->create(['user_id' => $user_id, 'status' => $status]);
     }
 
 }

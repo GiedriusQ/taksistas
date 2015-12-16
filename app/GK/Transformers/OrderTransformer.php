@@ -4,9 +4,9 @@ namespace App\GK\Transformers;
 
 class OrderTransformer extends Transformer
 {
-    public function transformArray(array $items)
+    public function transformArray(array $items = null)
     {
-        return array_map([$this, 'transformStatusHistory'], $items);
+        return !$items ? [] : array_map([$this, 'transformStatusHistory'], $items);
     }
 
     public function transform($item)

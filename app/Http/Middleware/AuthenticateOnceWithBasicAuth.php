@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\GK\Json\JsonRespond;
 use Auth;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
@@ -9,15 +10,21 @@ use Illuminate\Contracts\Auth\Guard;
 class AuthenticateOnceWithBasicAuth
 {
     protected $auth;
+    /**
+     * @var JsonRespond
+     */
+    private $jsonRespond;
 
     /**
      * Create a new middleware instance.
      *
      * @param  \Illuminate\Contracts\Auth\Guard $auth
+     * @param JsonRespond $jsonRespond
      */
-    public function __construct(Guard $auth)
+    public function __construct(Guard $auth, JsonRespond $jsonRespond)
     {
-        $this->auth = $auth;
+        $this->auth        = $auth;
+        $this->jsonRespond = $jsonRespond;
     }
 
     /**
@@ -29,7 +36,9 @@ class AuthenticateOnceWithBasicAuth
      */
     public function handle($request, Closure $next)
     {
-        return $this->auth->onceBasic() ? : $next($request);
+        return $this->auth->onceBasic() ?
+            $this->jsonRespond->setStatusCode(401)->respondWithError('Invalid credentials')
+            : $next($request);
     }
 
 }

@@ -37,9 +37,8 @@ class OrderStatusesController extends ApiController
     public function index(Order $order)
     {
         $statuses = $order->statusHistory()->paginate(20);
-        $data     = $this->statusTransformer->transformPaginator($statuses);
 
-        return $this->jsonRespond->respondWithPagination($statuses, $data);
+        return $this->jsonRespond->respondPaginator($this->statusTransformer, $statuses);
     }
 
     /**
@@ -50,8 +49,7 @@ class OrderStatusesController extends ApiController
     public function driverOrderStatuses(User $driver, Order $order)
     {
         $statuses = $order->statusHistory()->createdByUser($driver)->paginate(20);
-        $data     = $this->statusTransformer->transformPaginator($statuses);
 
-        return $this->jsonRespond->respondWithPagination($statuses, $data);
+        return $this->jsonRespond->respondPaginator($this->statusTransformer, $statuses);
     }
 }

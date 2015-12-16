@@ -36,7 +36,7 @@ class UsersController extends ApiController
     {
         $users = $this->users->paginate(20);
 
-        return $this->respondUserPaginator($this->userTransformer, $users);
+        return $this->jsonRespond->respondPaginator($this->userTransformer, $users);
     }
 
     /**
@@ -46,9 +46,9 @@ class UsersController extends ApiController
      */
     public function admins()
     {
-        $admins = $this->users->admin()->paginate(20);
+        $admins = $this->users->isAdmin()->paginate(20);
 
-        return $this->respondUserPaginator($this->userTransformer, $admins);
+        return $this->jsonRespond->respondPaginator($this->userTransformer, $admins);
     }
 
     /**
@@ -58,9 +58,9 @@ class UsersController extends ApiController
      */
     public function dispatchers()
     {
-        $dispatchers = $this->users->dispatcher()->paginate(20);
+        $dispatchers = $this->users->isDispatcher()->paginate(20);
 
-        return $this->respondUserPaginator($this->userTransformer, $dispatchers);
+        return $this->jsonRespond->respondPaginator($this->userTransformer, $dispatchers);
     }
 
     /**
@@ -70,9 +70,9 @@ class UsersController extends ApiController
      */
     public function drivers()
     {
-        $drivers = $this->users->driver()->paginate(20);
+        $drivers = $this->users->isDriver()->paginate(20);
 
-        return $this->respondUserPaginator($this->userTransformer, $drivers);
+        return $this->jsonRespond->respondPaginator($this->userTransformer, $drivers);
     }
 
     /**
@@ -85,7 +85,7 @@ class UsersController extends ApiController
     {
         $admin = $this->users->createAdmin($request->all());
 
-        return $this->respondUserModel($this->userTransformer, $admin);
+        return $this->jsonRespond->respondModelStore($this->userTransformer, $admin);
     }
 
     /**
@@ -98,7 +98,7 @@ class UsersController extends ApiController
     {
         $dispatcher = $this->users->createDispatcher($request->all());
 
-        return $this->respondUserModel($this->userTransformer, $dispatcher);
+        return $this->jsonRespond->respondModelStore($this->userTransformer, $dispatcher);
     }
 
     /**
@@ -109,7 +109,7 @@ class UsersController extends ApiController
      */
     public function show(User $admin)
     {
-        return $this->respondUserModel($this->userTransformer, $admin);
+        return $this->jsonRespond->respondModel($this->userTransformer, $admin);
     }
 
     /**
@@ -123,7 +123,7 @@ class UsersController extends ApiController
     {
         $admin->update($request->all());
 
-        return $this->respondUserModel($this->userTransformer, $admin);
+        return $this->jsonRespond->respondModel($this->userTransformer, $admin);
     }
 
     /**

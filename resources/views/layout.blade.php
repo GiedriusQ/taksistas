@@ -6,32 +6,37 @@
     <link href="{{asset('css/main.css')}}" rel="stylesheet" type="text/css">
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">TMS</a>
+@if(session('user'))
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">TMS</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                @if(session('user.type') == 0)
+                    @include('admin.partials.navbar')
+                @endif
+                @if(session('user.type') == 1)
+                    @include('dispatcher.partials.navbar')
+                @endif
+                @if(session('user.type') == 2)
+                    @include('driver.partials.navbar')
+                @endif
+                <ul class="nav navbar-nav pull-right">
+                    <li class="navbar-text">Logged in as {{$user->name}}</li>
+                    <li><a href="{{action('Front\LoginController@getLogout')}}">Logout</a></li>
+                </ul>
+            </div>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="">Profile</a></li>
-                <li><a href="">About</a></li>
-                <li><a href="">Contact</a></li>
-            </ul>
-            <ul class="nav navbar-nav pull-right">
-                <li class="navbar-text">Logged in as {{$user->name}}</li>
-                <li><a href="#">Logout</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
+    </nav>
+@endif
 <div class="container">
     @include('partials.errors')
     @yield('content')

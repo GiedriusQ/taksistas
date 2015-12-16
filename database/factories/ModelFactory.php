@@ -10,3 +10,12 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'city'           => $faker->city
     ];
 });
+
+$factory->define(App\Order::class, function (Faker\Generator $faker) {
+    return [
+        'from'       => $faker->address,
+        'to'         => $faker->address,
+        'client'     => $faker->name,
+        'created_at' => $faker->dateTimeBetween('-30 minutes')
+    ];
+});

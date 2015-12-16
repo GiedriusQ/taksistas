@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\API\Dispatcher;
 
-use App\GK\Transformers\OrderTransformer;
-use Illuminate\Http\Request;
-
+use App\Order;
 use App\Http\Requests;
+use App\GK\Json\JsonRespond;
+use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
+use App\GK\Transformers\OrderTransformer;
 
 class OrdersController extends ApiController
 {
@@ -15,9 +16,23 @@ class OrdersController extends ApiController
      * @var OrderTransformer
      */
     private $orderTransformer;
+    /**
+     * @var Order
+     */
+    private $orders;
 
-    public function __construct(OrderTransformer $orderTransformer) {
+    /**
+     * OrdersController constructor.
+     * @param Order $orders
+     * @param OrderTransformer $orderTransformer
+     * @param JsonRespond $jsonRespond
+     */
+    public function __construct(Order $orders, OrderTransformer $orderTransformer, JsonRespond $jsonRespond)
+    {
+        parent::__construct($jsonRespond);
+        $this->orders           = $orders;
         $this->orderTransformer = $orderTransformer;
+        $this->jsonRespond      = $jsonRespond;
     }
 
     /**
@@ -27,7 +42,9 @@ class OrdersController extends ApiController
      */
     public function index()
     {
-        //
+        $orders = $this->orders->paginate(20);
+
+        return $this->jsonRespond->respondPaginator($this->orderTransformer, $orders);
     }
 
     /**
@@ -38,40 +55,46 @@ class OrdersController extends ApiController
      */
     public function store(Request $request)
     {
-        //
+        $order = $this->orders->create($request->all());
+
+        return $this->jsonRespond->respondModelStore($this->orderTransformer, $order);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param Order $order
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Order $order)
     {
-        //
+        return $this->jsonRespond->respondModel($this->orderTransformer, $order);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param Order $order
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Order $order)
     {
-        //
+        $order->update($request->all());
+
+        return $this->jsonRespond->respondUpdate($order);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param Order $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Order $order)
     {
-        //
+        $order->delete();
+
+        return $this->jsonRespond->respondDelete();
     }
 }

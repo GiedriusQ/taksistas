@@ -25,8 +25,7 @@ class AdminRequest extends CustomResponse
             'name'     => 'required|min:3|max:60|unique:users,name,' . $this->user()->id,
             'city'     => 'required|min:3|max:60',
             'email'    => 'required|email|max:255|unique:users,email,' . $this->user()->id,
-            'password' => 'sometimes|min:6',
-            'type'     => 'required|in:0,1,2'
+            'password' => 'sometimes|min:6'
         ];
     }
 

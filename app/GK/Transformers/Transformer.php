@@ -18,9 +18,9 @@ abstract class Transformer
         return $items->map([$this, 'transform']);
     }
 
-    public function transformModel(Model $item)
+    public function transformModel(Model $item = null)
     {
-        return $this->transform($item->toArray());
+        return !$item ? [] : $this->transform($item->toArray());
     }
 
     public abstract function transform($item);

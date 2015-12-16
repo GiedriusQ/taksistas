@@ -23,11 +23,14 @@ use Illuminate\Support\Facades\Config;
  * @property-read \App\Order $order
  * @property-read \App\User $user
  * @property-read mixed $status_str
+ * @property-read mixed $added_at
+ * @property-read mixed $created_at_readable
+ * @method static \Illuminate\Database\Query\Builder|\App\StatusHistory createByUser($user)
  */
 class StatusHistory extends Model
 {
     use StatusAndDate;
-    protected $fillable = ['status'];
+    protected $fillable = ['user_id', 'status'];
     protected $hidden = ['id', 'updated_at', 'user_id', 'order_id'];
     protected $appends = ['status_str', 'added_at', 'created_at_readable'];
 

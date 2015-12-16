@@ -18,13 +18,13 @@ class DriverOrdersController extends ApiController
 
     /**
      * DriverOrdersController constructor.
-     * @param OrderTransformer $orderTransformer
+     * @param OrderTransformer $statusTransformer
      * @param JsonRespond $jsonRespond
      */
-    public function __construct(OrderTransformer $orderTransformer, JsonRespond $jsonRespond)
+    public function __construct(OrderTransformer $statusTransformer, JsonRespond $jsonRespond)
     {
         parent::__construct($jsonRespond);
-        $this->orderTransformer = $orderTransformer;
+        $this->orderTransformer = $statusTransformer;
         $this->jsonRespond      = $jsonRespond;
     }
 
@@ -38,9 +38,7 @@ class DriverOrdersController extends ApiController
     {
         $users = $driver->orders()->paginate(20);
 
-        $data = $this->orderTransformer->transformPaginator($users);
-
-        return $this->jsonRespond->respondWithPagination($users, $data);
+        return $this->jsonRespond->respondPaginator($this->orderTransformer, $users);
     }
 
     /**

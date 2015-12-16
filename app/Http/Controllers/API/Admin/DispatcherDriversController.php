@@ -39,7 +39,7 @@ class DispatcherDriversController extends ApiController
     {
         $drivers = $dispatcher->drivers()->paginate(20);
 
-        return $this->respondUserPaginator($this->userTransformer, $drivers);
+        return $this->jsonRespond->respondPaginator($this->userTransformer, $drivers);
     }
 
     /**
@@ -52,7 +52,7 @@ class DispatcherDriversController extends ApiController
     {
         $driver = $dispatcher->createDriverForDispatcher($request->all());
 
-        return $this->respondUserModel($this->userTransformer, $driver);
+        return $this->jsonRespond->respondModel($this->userTransformer, $driver);
     }
 
     /**
@@ -64,7 +64,7 @@ class DispatcherDriversController extends ApiController
      */
     public function show(User $dispatcher, User $driver)
     {
-        return $this->respondUserModel($this->userTransformer, $driver);
+        return $this->jsonRespond->respondModel($this->userTransformer, $driver);
     }
 
     /**
@@ -79,7 +79,7 @@ class DispatcherDriversController extends ApiController
     {
         $driver->update($request->all());
 
-        return $this->respondUserModel($this->userTransformer, $driver);
+        return $this->jsonRespond->respondModel($this->userTransformer, $driver);
     }
 
     /**

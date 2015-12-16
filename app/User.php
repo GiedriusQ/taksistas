@@ -37,8 +37,6 @@ use Illuminate\Support\Facades\Hash;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\User[] $drivers
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Order[] $orders
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\DriverLocation[] $locations
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\StatsHistory[] $statuses
- * @property-read \App\Profile $profile
  * @property string $name
  * @property string $city
  * @method static \Illuminate\Database\Query\Builder|\App\User whereName($value)
@@ -46,6 +44,11 @@ use Illuminate\Support\Facades\Hash;
  * @method static \Illuminate\Database\Query\Builder|\App\User admin()
  * @method static \Illuminate\Database\Query\Builder|\App\User dispatcher()
  * @method static \Illuminate\Database\Query\Builder|\App\User driver()
+ * @property-read mixed $role
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\StatusHistory[] $statuses
+ * @method static \Illuminate\Database\Query\Builder|\App\User isAdmin()
+ * @method static \Illuminate\Database\Query\Builder|\App\User isDispatcher()
+ * @method static \Illuminate\Database\Query\Builder|\App\User isDriver()
  */
 class User extends Model implements AuthenticatableContract,
     AuthorizableContract,
@@ -101,7 +104,7 @@ class User extends Model implements AuthenticatableContract,
 
     public function locations()
     {
-        return $this->hasMany('App\DriverLocation', 'driver_id');
+        return $this->hasMany('App\DriverLocation', 'driver_id')->latest();
     }
 
     /**
@@ -112,27 +115,34 @@ class User extends Model implements AuthenticatableContract,
         return $this->hasMany('App\StatusHistory');
     }
 
-    public function isAdmin()
+    public function is_admin()
     {
         return $this->type == 0;
     }
 
     public function owns($id)
     {
-        return $this->drivers()->whereId($id)->exists() || $this->dispatcher()->whereId($id)->exists() || $this->isAdmin() || $this->id == $id;
+        return $this->drivers()->whereId($id)->exists() || $this->dispatcher()->whereId($id)->exists() || $this->is_admin() || $this->id == $id;
     }
 
-    public function scopeAdmin($query)
+    public function ownsOrder($order)
+    {
+        $id = $order instanceof Model ? $order->id : $order;
+
+        return $this->orders()->whereId($id)->whereDriverId($this->id)->exists() || $this->orders()->whereId($id)->whereDispatcherId($this->id)->exists();
+    }
+
+    public function scopeIsAdmin($query)
     {
         $query->whereType('0');
     }
 
-    public function scopeDispatcher($query)
+    public function scopeIsDispatcher($query)
     {
         $query->whereType('1');
     }
 
-    public function scopeDriver($query)
+    public function scopeIsDriver($query)
     {
         $query->whereType('2');
     }
@@ -149,17 +159,27 @@ class User extends Model implements AuthenticatableContract,
 
     public function createAdmin(array $attributes = [])
     {
-        return $this->create(['type' => 0] + $attributes);
+        return $this->createUserWithType($attributes, 0);
     }
 
     public function createDispatcher(array $attributes = [])
     {
-        return $this->create(['type' => 1] + $attributes);
+
+        return $this->createUserWithType($attributes, 1);
     }
 
     public function createDriverForDispatcher(array $attributes = [])
     {
-        return $this->drivers()->save(new User(['type' => 1] + $attributes));
+        return $this->createUserWithType($attributes, 2);
+    }
+
+    private function createUserWithType(array $attributes, $type)
+    {
+        $user       = $this->create($attributes);
+        $user->type = $type;
+        $user->save();
+
+        return $user;
     }
 
 }
