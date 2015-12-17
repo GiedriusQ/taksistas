@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Driver;
 
 use App\GK\Json\JsonRespond;
 use App\GK\Transformers\OrderTransformer;
+use App\Http\Requests\Driver\UpdateOrderRequest;
 use App\Order;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Http\Request;
@@ -30,16 +31,16 @@ class OrdersController extends ApiController
 
     public function index()
     {
-        $orders = $this->user->orders()->paginate(20);
+        $orders = $this->user->orders()->latest()->paginate(20);
 
         return $this->jsonRespond->respondPaginator($this->orderTransformer, $orders);
     }
 
-    public function update(Request $request, Order $order)
+    public function update(UpdateOrderRequest $request, Order $order)
     {
         $order->update($request->all());
 
-        return $this->jsonRespond->respondUpdate($order);
+        return $this->jsonRespond->respondModel($this->orderTransformer, $order);
     }
 
     public function show(Order $order)

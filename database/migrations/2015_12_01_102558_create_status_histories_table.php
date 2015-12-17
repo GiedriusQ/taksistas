@@ -15,7 +15,7 @@ class CreateStatusHistoriesTable extends Migration
         Schema::create('status_histories', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id')->index()->unsigned();
-            $table->foreign('order_id')->references('id')->on('orders');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->integer('user_id')->index()->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->tinyInteger('status')->unsigned()->default(0);

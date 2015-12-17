@@ -52,11 +52,13 @@ class Order extends Model
      *
      * @var array
      */
-    protected $fillable = ['from', 'to', 'client', 'driver_id'];
+    protected $fillable = ['from', 'to', 'client', 'driver_id', 'status'];
 
-    protected $hidden = ['driver_id', 'dispatcher_id', 'lat', 'lng', 'destination_lat', 'destination_lng'];
+    protected $hidden = ['lat', 'lng', 'destination_lat', 'destination_lng'];
 
     protected $appends = ['status_str', 'added_at', 'created_at_readable'];
+
+    protected $casts = ['driver_id' => 'int', 'dispatcher_id' => 'int', 'id' => 'int'];
 
     public function dispatcher()
     {

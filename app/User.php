@@ -85,6 +85,8 @@ class User extends Model implements AuthenticatableContract,
      */
     protected $appends = ['role'];
 
+    protected $casts = ['id' => 'int', 'type' => 'int'];
+
     public $timestamps = false;
 
     public function dispatcher()
@@ -119,6 +121,11 @@ class User extends Model implements AuthenticatableContract,
     public function is_admin()
     {
         return $this->type == 0;
+    }
+
+    public function is_dispatcher()
+    {
+        return $this->type == 1;
     }
 
     public function owns($id)
@@ -165,22 +172,34 @@ class User extends Model implements AuthenticatableContract,
 
     public function createDispatcher(array $attributes = [])
     {
-
         return $this->createUserWithType($attributes, 1);
     }
 
     public function createDriverForDispatcher(array $attributes = [])
     {
-        return $this->dispatcher()->associate($this->createUserWithType($attributes, 2));
+        return $this->drivers()->save($this->makeUserWithType($attributes, 2));
+    }
+
+    private function makeUserWithType(array $attributes, $type)
+    {
+        $user       = new User($attributes);
+        $user->type = $type;
+
+        return $user;
     }
 
     private function createUserWithType(array $attributes, $type)
     {
-        $user       = $this->create($attributes);
+        $user       = new User($attributes);
         $user->type = $type;
         $user->save();
 
         return $user;
+    }
+
+    public function createOrder(array $attributes = [])
+    {
+        return $this->orders()->create($attributes);
     }
 
 }

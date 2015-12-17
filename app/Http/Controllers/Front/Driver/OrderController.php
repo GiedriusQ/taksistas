@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front\Driver;
 
+use App\GK\Utilities\API;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -10,57 +11,61 @@ use App\Http\Controllers\Controller;
 class OrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var API
      */
-    public function index()
-    {
-        //
-    }
+    private $API;
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * UserController constructor.
+     * @param API $API
      */
-    public function store(Request $request)
+    public function __construct(API $API)
     {
-        //
+        $this->API = $API;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function getOrders(Request $request)
     {
-        //
+        $orders = $this->API->call(API::driver_orders . '?page=' . $request->get('page', 1));
+        if ($orders->status_code != 200) {
+            return redirect()->back()->withErrors($orders->error);
+        }
+
+        return view('driver.orders.index', compact('orders'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function getShowOrder($id)
     {
-        //
+        $order = $this->API->call(API::driver_orders . "/{$id}");
+        if ($order->status_code != 200) {
+            return redirect()->back()->withErrors($order->error);
+        }
+        $order = $order->data;
+
+        return view('driver.orders.show', compact('order'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function getEditOrder($id)
     {
-        //
+        $order = $this->API->call(API::driver_orders . "/{$id}");
+        if ($order->status_code != 200) {
+            return redirect()->back()->withErrors($order->error);
+        }
+        $order         = $order->data;
+        $order->from   = $order->take_from;
+        $order->to     = $order->transport_to;
+        $order->status = array_keys(config('statuses'), $order->status)[0];
+
+        return view('driver.orders.edit', compact('order'));
+    }
+
+    public function postEditOrder(Request $request, $id)
+    {
+        $order = $this->API->call(API::driver_orders . "/{$id}", 'PUT', $request->all());
+        if ($order->status_code != 200) {
+            return redirect()->back()->withErrors($order->error);
+        }
+
+        return redirect()->action('Front\Driver\OrderController@getOrders');
     }
 }

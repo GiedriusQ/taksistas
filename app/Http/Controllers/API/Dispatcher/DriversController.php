@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Dispatcher;
 
 use App\GK\Json\JsonRespond;
 use App\GK\Transformers\UserTransformer;
+use App\Http\Requests\Dispatcher\StoreUserRequest;
 use App\Http\Requests\Dispatcher\UpdateUserRequest;
 use App\User;
 use Illuminate\Auth\AuthManager;
@@ -44,7 +45,7 @@ class DriversController extends ApiController
      */
     public function index()
     {
-        $drivers = $this->users->paginate(20);
+        $drivers = $this->user->drivers()->latest()->paginate(20);
 
         return $this->jsonRespond->respondPaginator($this->userTransformer, $drivers);
     }
@@ -52,14 +53,14 @@ class DriversController extends ApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param StoreUserRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
         $driver = $this->user->createDriverForDispatcher($request->all());
 
-        return $this->jsonRespond->respondModel($this->userTransformer, $driver);
+        return $this->jsonRespond->respondModelStore($this->userTransformer, $driver);
     }
 
     /**

@@ -5,7 +5,7 @@ namespace App\Http\Requests\Driver;
 use App\Http\Requests\CustomResponse;
 use Illuminate\Auth\AuthManager;
 
-class StoreStatusRequest extends CustomResponse
+class UpdateOrderRequest extends CustomResponse
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,6 +27,7 @@ class StoreStatusRequest extends CustomResponse
     {
         return [
             'status' => 'required|in:0,1,2',
+            'to'     => 'required|min:3|max:150'
         ];
     }
 }

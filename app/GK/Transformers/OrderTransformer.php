@@ -15,6 +15,8 @@ class OrderTransformer extends Transformer
             'id'             => (int)$item['id'],
             'take_from'      => $item['from'],
             'transport_to'   => $item['to'],
+            'driver_id'      => isset($item['driver_id']) ? $item['driver_id'] : null,
+            'dispatcher_id'  => $item['dispatcher_id'],
             'status'         => $item['status_str'],
             'client'         => $item['client'],
             'created_at'     => $item['created_at_readable'],

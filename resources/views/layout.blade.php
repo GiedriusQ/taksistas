@@ -20,13 +20,13 @@
                 <a class="navbar-brand" href="#">TMS</a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
-                @if(session('user.type') == 0)
+                @if(session('user')->type == 0)
                     @include('admin.partials.navbar')
                 @endif
-                @if(session('user.type') == 1)
+                @if(session('user')->type == 1)
                     @include('dispatcher.partials.navbar')
                 @endif
-                @if(session('user.type') == 2)
+                @if(session('user')->type == 2)
                     @include('driver.partials.navbar')
                 @endif
                 <ul class="nav navbar-nav pull-right">

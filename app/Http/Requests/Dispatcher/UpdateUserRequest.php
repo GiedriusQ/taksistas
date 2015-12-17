@@ -17,8 +17,6 @@ class UpdateUserRequest extends CustomResponse
      */
     public function authorize(AuthManager $auth)
     {
-        $this->id = $this->route('users') ? : ($this->route('drivers') ? : ($this->route('dispatchers') ? : $this->route('admins')));
-
         return $auth->user()->owns($this->id);
     }
 
@@ -29,11 +27,13 @@ class UpdateUserRequest extends CustomResponse
      */
     public function rules()
     {
+        $this->id = $this->route('drivers')->id;
+
         return [
             'name'     => 'required|min:3|max:60|unique:users,name,' . $this->id . '',
             'city'     => 'required|min:3|max:60',
             'email'    => 'required|email|max:255|unique:users,email,' . $this->id,
-            'password' => 'required|min:6'
+            'password' => 'sometimes|min:6'
         ];
     }
 }

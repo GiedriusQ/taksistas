@@ -15,7 +15,7 @@ class StoreUserRequest extends CustomResponse
      */
     public function authorize(AuthManager $auth)
     {
-        return $auth->user()->isAdmin();
+        return $auth->user()->is_dispatcher();
     }
 
     /**

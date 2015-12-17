@@ -30,7 +30,7 @@ class DriverOrdersController extends ApiController
 
     public function index(User $driver)
     {
-        $orders = $driver->orders()->paginate(20);
+        $orders = $driver->orders()->latest()->paginate(20);
 
         return $this->jsonRespond->respondPaginator($this->orderTransformer, $orders);
     }

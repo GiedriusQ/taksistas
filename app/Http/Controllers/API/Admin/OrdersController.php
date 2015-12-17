@@ -33,7 +33,7 @@ class OrdersController extends ApiController
      */
     public function index()
     {
-        $orders = $this->orders->paginate(20);
+        $orders = $this->orders->latest()->paginate(20);
 
         return $this->jsonRespond->respondPaginator($this->orderTransformer, $orders);
     }

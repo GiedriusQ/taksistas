@@ -22,6 +22,11 @@ class API
 
     const admin_orders = self::base_url . '/api/admin/orders';
 
+    const dispatcher_orders = self::base_url . '/api/dispatcher/orders';
+    const dispatcher_drivers = self::base_url . '/api/dispatcher/drivers';
+
+    const driver_orders = self::base_url . '/api/driver/orders';
+
     private $client;
 
     public function __construct()

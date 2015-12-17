@@ -130,8 +130,9 @@ class JsonRespond
         $paginatorArray = $paginator->toArray();
         unset($paginatorArray['data']);
         $data = [
-            'paginator' => $paginatorArray,
-            'data'      => $data
+            'paginator'   => $paginatorArray,
+            'data'        => $data,
+            'status_code' => $this->getStatusCode()
         ];
 
         return $this->respond($data);

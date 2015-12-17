@@ -45,28 +45,28 @@ class UsersController extends ApiController
      */
     public function index()
     {
-        $users = $this->users->paginate(20);
+        $users = $this->users->latest()->paginate(20);
 
         return $this->jsonRespond->respondPaginator($this->userTransformer, $users);
     }
 
     public function admins()
     {
-        $admins = $this->users->isAdmin()->get(['name', 'id']);
+        $admins = $this->users->isAdmin()->latest()->get(['name', 'id']);
 
         return $this->jsonRespond->respondCollection($this->userListTransformer, $admins);
     }
 
     public function dispatchers()
     {
-        $admins = $this->users->isDispatcher()->get(['name', 'id']);
+        $admins = $this->users->isDispatcher()->latest()->get(['name', 'id']);
 
         return $this->jsonRespond->respondCollection($this->userListTransformer, $admins);
     }
 
     public function drivers()
     {
-        $admins = $this->users->isDriver()->get(['name', 'id']);
+        $admins = $this->users->isDriver()->latest()->get(['name', 'id']);
 
         return $this->jsonRespond->respondCollection($this->userListTransformer, $admins);
     }
@@ -78,7 +78,7 @@ class UsersController extends ApiController
      */
     public function detailedAdmins()
     {
-        $admins = $this->users->isAdmin()->paginate(20);
+        $admins = $this->users->isAdmin()->latest()->paginate(20);
 
         return $this->jsonRespond->respondPaginator($this->userTransformer, $admins);
     }
@@ -90,7 +90,7 @@ class UsersController extends ApiController
      */
     public function detailedDispatchers()
     {
-        $dispatchers = $this->users->isDispatcher()->paginate(20);
+        $dispatchers = $this->users->isDispatcher()->latest()->paginate(20);
 
         return $this->jsonRespond->respondPaginator($this->userTransformer, $dispatchers);
     }
@@ -102,7 +102,7 @@ class UsersController extends ApiController
      */
     public function detailedDrivers()
     {
-        $drivers = $this->users->isDriver()->paginate(20);
+        $drivers = $this->users->isDriver()->latest()->paginate(20);
 
         return $this->jsonRespond->respondPaginator($this->userTransformer, $drivers);
     }

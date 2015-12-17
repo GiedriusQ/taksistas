@@ -37,7 +37,7 @@ class DispatcherDriversController extends ApiController
      */
     public function index(User $dispatcher)
     {
-        $drivers = $dispatcher->drivers()->paginate(20);
+        $drivers = $dispatcher->drivers()->latest()->paginate(20);
 
         return $this->jsonRespond->respondPaginator($this->userTransformer, $drivers);
     }

@@ -16,7 +16,7 @@ class DispatcherMiddleware
     public function handle($request, Closure $next)
     {
         if ($request->user()) {
-            if ($request->user()->type == '1') {
+            if ($request->user()->type == 1) {
                 return $next($request);
             }
         }

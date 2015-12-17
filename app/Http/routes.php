@@ -23,13 +23,11 @@ Route::group(['prefix' => 'api'], function () {
         });
         Route::group(['middleware' => 'dispatcher', 'prefix' => 'dispatcher'], function () {
             Route::resource('orders', 'API\Dispatcher\OrdersController', ['except' => ['create', 'edit']]);
-            Route::resource('orders', 'API\Dispatcher\OrderStatusesController', ['only' => 'index']);
             Route::resource('drivers', 'API\Dispatcher\DriversController', ['except' => ['create', 'edit']]);
             Route::resource('drivers.orders', 'API\Dispatcher\DriverOrdersController', ['only' => ['index', 'show']]);
         });
         Route::group(['middleware' => 'driver', 'prefix' => 'driver'], function () {
             Route::resource('orders', 'API\Driver\OrdersController', ['only' => ['index', 'show', 'update']]);
-            Route::resource('orders.statuses', 'API\Driver\OrderStatusesController', ['only' => ['store']]);
             Route::resource('locations', 'API\Driver\LocationsController', ['only' => ['index', 'store']]);
         });
     });
@@ -51,11 +49,11 @@ Route::group(['prefix' => 'frontend'], function () {
             Route::controller('user', 'Front\Admin\UserController');
         });
         Route::group(['middleware' => 'frontend.dispatcher', 'prefix' => 'dispatcher'], function () {
-            Route::resource('user', 'Front\Dispatcher\UserController');
-            Route::resource('order', 'Front\Dispatcher\OrderController');
+            Route::controller('driver', 'Front\Dispatcher\DriverController');
+            Route::controller('order', 'Front\Dispatcher\OrderController');
         });
         Route::group(['middleware' => 'frontend.driver', 'prefix' => 'driver'], function () {
-            Route::resource('order', 'Front\Driver\OrderController');
+            Route::controller('order', 'Front\Driver\OrderController');
         });
     });
 });

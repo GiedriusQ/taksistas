@@ -16,10 +16,10 @@ class AdminMiddleware
     public function handle($request, Closure $next)
     {
         if (!$request->session()->has('user')) {
-            return redirect()->route('frontend.login.index');
+            return redirect()->action('Front\LoginController@getLogin');
         }
-        if ($request->session()->get('user.type') != 0) {
-            return redirect()->route('frontend.login.index');
+        if ($request->session()->get('user')->type != 0) {
+            return redirect()->action('Front\LoginController@getLogin');
         }
 
         return $next($request);

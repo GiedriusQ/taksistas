@@ -39,7 +39,7 @@ class RouteServiceProvider extends ServiceProvider
         $router->model('drivers', User::class, $throwModelNotFound);
         $router->bind('orders', function ($id) {
             try {
-                return Order::with('statusHistory')->find($id);
+                return Order::with('statusHistory')->findOrFail($id);
             } catch (Exception $e) {
                 $this->throwModelNotFound();
             }
