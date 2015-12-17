@@ -30,7 +30,7 @@
                     @include('driver.partials.navbar')
                 @endif
                 <ul class="nav navbar-nav pull-right">
-                    <li class="navbar-text">Logged in as {{$user->name}}</li>
+                    <li class="navbar-text"><span class="glyphicon glyphicon-user"></span> {{$user->name}}</li>
                     <li><a href="{{action('Front\LoginController@getLogout')}}">Logout</a></li>
                 </ul>
             </div>

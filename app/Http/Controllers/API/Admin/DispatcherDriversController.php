@@ -46,13 +46,14 @@ class DispatcherDriversController extends ApiController
      * Store a newly created resource in storage.
      *
      * @param StoreUserRequest $request
+     * @param User $dispatcher
      * @return \Illuminate\Http\Response
      */
     public function store(StoreUserRequest $request, User $dispatcher)
     {
         $driver = $dispatcher->createDriverForDispatcher($request->all());
 
-        return $this->jsonRespond->respondModel($this->userTransformer, $driver);
+        return $this->jsonRespond->respondModelStore($this->userTransformer, $driver);
     }
 
     /**

@@ -18,7 +18,7 @@ class AdminMiddleware
         if (!$request->session()->has('user')) {
             return redirect()->route('frontend.login.index');
         }
-        if ($request->session()->get('user')->type != 0) {
+        if ($request->session()->get('user.type') != 0) {
             return redirect()->route('frontend.login.index');
         }
 

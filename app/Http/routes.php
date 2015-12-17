@@ -5,8 +5,11 @@ Route::group(['prefix' => 'api'], function () {
     Route::group(['middleware' => 'auth.basic.once'], function () {
         Route::group(['middleware' => 'admin', 'prefix' => 'admin'], function () {
             Route::get('users/admins', 'API\Admin\UsersController@admins');
+            Route::get('users/admins/detailed', 'API\Admin\UsersController@detailedAdmins');
             Route::get('users/drivers', 'API\Admin\UsersController@drivers');
+            Route::get('users/drivers/detailed', 'API\Admin\UsersController@detailedDrivers');
             Route::get('users/dispatchers', 'API\Admin\UsersController@dispatchers');
+            Route::get('users/dispatchers/detailed', 'API\Admin\UsersController@detailedDispatchers');
             Route::post('users/admins', 'API\Admin\UsersController@storeAdmins');
             Route::post('users/dispatchers', 'API\Admin\UsersController@storeDispatchers');
             Route::resource('users', 'API\Admin\UsersController', ['except' => ['edit', 'create', 'store']]);
@@ -44,8 +47,8 @@ Route::group(['prefix' => 'frontend'], function () {
     Route::group(['middleware' => 'frontend.auth'], function () {
         Route::controller('home', 'Front\HomeController');
         Route::group(['middleware' => 'frontend.admin', 'prefix' => 'admin'], function () {
-            Route::resource('order', 'Front\Admin\OrderController');
-            Route::resource('user', 'Front\Admin\UserController');
+            Route::controller('order', 'Front\Admin\OrderController');
+            Route::controller('user', 'Front\Admin\UserController');
         });
         Route::group(['middleware' => 'frontend.dispatcher', 'prefix' => 'dispatcher'], function () {
             Route::resource('user', 'Front\Dispatcher\UserController');

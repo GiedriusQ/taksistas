@@ -151,6 +151,13 @@ class JsonRespond
         return $this->respondWithData($data);
     }
 
+    public function respondCollection(Transformer $transformer, $item)
+    {
+        $data = $transformer->transformCollection($item);
+
+        return $this->respondWithData($data);
+    }
+
     public function respondModelStore(Transformer $transformer, $item)
     {
         $data = $transformer->transformModel($item);

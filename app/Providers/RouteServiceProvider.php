@@ -34,6 +34,7 @@ class RouteServiceProvider extends ServiceProvider
             throw new ModelNotFoundException;
         };
         $router->model('admins', User::class, $throwModelNotFound);
+        $router->model('users', User::class, $throwModelNotFound);
         $router->model('dispatchers', User::class, $throwModelNotFound);
         $router->model('drivers', User::class, $throwModelNotFound);
         $router->bind('orders', function ($id) {

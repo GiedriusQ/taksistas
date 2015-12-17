@@ -8,6 +8,20 @@ class API
 {
     const base_url = 'http://localhost:88';
     const login_url = self::base_url . '/api/login';
+
+    const admin_admins = self::base_url . '/api/admin/users/admins/detailed';
+    const admin_dispatchers = self::base_url . '/api/admin/users/dispatchers/detailed';
+    const admin_drivers = self::base_url . '/api/admin/users/drivers/detailed';
+
+    const admin_dispatchers_drivers = self::base_url . '/api/admin/dispatchers';
+
+    const admin_admins_list = self::base_url . '/api/admin/users/admins';
+    const admin_dispatchers_list = self::base_url . '/api/admin/users/dispatchers';
+    const admin_drivers_list = self::base_url . '/api/admin/users/drivers';
+    const admin_users = self::base_url . '/api/admin/users';
+
+    const admin_orders = self::base_url . '/api/admin/orders';
+
     private $client;
 
     public function __construct()

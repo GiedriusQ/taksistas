@@ -18,7 +18,7 @@ class DriverMiddleware
         if (!$request->session()->has('user')) {
             return redirect()->route('frontend.login.index');
         }
-        if ($request->session()->get('user')->type != 2) {
+        if ($request->session()->get('user.type') != 2) {
             return redirect()->route('frontend.login.index');
         }
 

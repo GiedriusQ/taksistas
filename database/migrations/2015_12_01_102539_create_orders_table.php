@@ -15,9 +15,9 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('driver_id')->index()->unsigned()->nullable();
-            $table->foreign('driver_id')->references('id')->on('users');
+            $table->foreign('driver_id')->references('id')->on('users')->onDelete('set null');
             $table->integer('dispatcher_id')->index()->unsigned();
-            $table->foreign('dispatcher_id')->references('id')->on('users');
+            $table->foreign('dispatcher_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('from', 150);
             $table->string('to', 150);
             $table->string('client', 100);

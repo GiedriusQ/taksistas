@@ -37,7 +37,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'EET',
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration

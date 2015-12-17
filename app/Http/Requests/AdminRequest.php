@@ -21,10 +21,12 @@ class AdminRequest extends CustomResponse
      */
     public function rules()
     {
+        $id = $this->route('users') ? $this->route('users')->id : null;
+
         return [
-            'name'     => 'required|min:3|max:60|unique:users,name,' . $this->user()->id,
+            'name'     => 'required|min:3|max:60|unique:users,name,' . $id,
             'city'     => 'required|min:3|max:60',
-            'email'    => 'required|email|max:255|unique:users,email,' . $this->user()->id,
+            'email'    => 'required|email|max:255|unique:users,email,' . $id,
             'password' => 'sometimes|min:6'
         ];
     }

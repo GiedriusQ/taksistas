@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Admin;
 
+use App\GK\Transformers\UserListTransformer;
 use App\User;
 use App\Http\Requests;
 use App\GK\Json\JsonRespond;
@@ -13,17 +14,27 @@ class UsersController extends ApiController
 {
     protected $userTransformer;
     protected $users;
+    /**
+     * @var UserListTransformer
+     */
+    private $userListTransformer;
 
     /**
      * AdminsController constructor.
+     * @param UserListTransformer $userListTransformer
      * @param User $users
      * @param JsonRespond $jsonRespond
      * @param UserTransformer $userTransformer
      */
-    public function __construct(User $users, JsonRespond $jsonRespond, UserTransformer $userTransformer)
-    {
-        $this->userTransformer = $userTransformer;
-        $this->users           = $users;
+    public function __construct(
+        UserListTransformer $userListTransformer,
+        User $users,
+        JsonRespond $jsonRespond,
+        UserTransformer $userTransformer
+    ) {
+        $this->userTransformer     = $userTransformer;
+        $this->users               = $users;
+        $this->userListTransformer = $userListTransformer;
         parent::__construct($jsonRespond);
     }
 
@@ -39,12 +50,33 @@ class UsersController extends ApiController
         return $this->jsonRespond->respondPaginator($this->userTransformer, $users);
     }
 
+    public function admins()
+    {
+        $admins = $this->users->isAdmin()->get(['name', 'id']);
+
+        return $this->jsonRespond->respondCollection($this->userListTransformer, $admins);
+    }
+
+    public function dispatchers()
+    {
+        $admins = $this->users->isDispatcher()->get(['name', 'id']);
+
+        return $this->jsonRespond->respondCollection($this->userListTransformer, $admins);
+    }
+
+    public function drivers()
+    {
+        $admins = $this->users->isDriver()->get(['name', 'id']);
+
+        return $this->jsonRespond->respondCollection($this->userListTransformer, $admins);
+    }
+
     /**
      * Display a listing of the admins.
      *
      * @return \Illuminate\Http\Response
      */
-    public function admins()
+    public function detailedAdmins()
     {
         $admins = $this->users->isAdmin()->paginate(20);
 
@@ -56,7 +88,7 @@ class UsersController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function dispatchers()
+    public function detailedDispatchers()
     {
         $dispatchers = $this->users->isDispatcher()->paginate(20);
 
@@ -68,7 +100,7 @@ class UsersController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function drivers()
+    public function detailedDrivers()
     {
         $drivers = $this->users->isDriver()->paginate(20);
 
@@ -107,35 +139,35 @@ class UsersController extends ApiController
      * @param User $admin
      * @return \Illuminate\Http\Response
      */
-    public function show(User $admin)
+    public function show(User $users)
     {
-        return $this->jsonRespond->respondModel($this->userTransformer, $admin);
+        return $this->jsonRespond->respondModel($this->userTransformer, $users);
     }
 
     /**
      * Update the specified user in storage.
      *
      * @param AdminRequest $request
-     * @param User $admin
+     * @param User $users
      * @return \Illuminate\Http\Response
      */
-    public function update(AdminRequest $request, User $admin)
+    public function update(AdminRequest $request, User $users)
     {
-        $admin->update($request->all());
+        $users->update($request->all());
 
-        return $this->jsonRespond->respondModel($this->userTransformer, $admin);
+        return $this->jsonRespond->respondModel($this->userTransformer, $users);
     }
 
     /**
      * Remove the specified user from storage.
      *
-     * @param User $admin
+     * @param User $users
      * @return \Illuminate\Http\Response
      * @throws \Exception
      */
-    public function destroy(User $admin)
+    public function destroy(User $users)
     {
-        $admin->delete();
+        $users->delete();
 
         return $this->jsonRespond->respondDelete();
     }
