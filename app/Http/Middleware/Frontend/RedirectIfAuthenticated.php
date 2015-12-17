@@ -35,7 +35,7 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next)
     {
         if ($request->session()->has('user')) {
-            return redirect('/frontend');
+            return redirect('/frontend/home/home')->withErrors(['You are authenticated!']);
         }
 
         return $next($request);

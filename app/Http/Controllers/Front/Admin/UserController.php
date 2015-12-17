@@ -106,7 +106,7 @@ class UserController extends Controller
             return redirect()->back()->withErrors($admin->error);
         }
 
-        return redirect()->action('Front\Admin\UserController@getAdmins');
+        return redirect()->action('Front\Admin\UserController@getAdmins')->withSuccess('Admin deleted successfully');
     }
 
     public function getDeleteDispatcher($id)
@@ -116,7 +116,7 @@ class UserController extends Controller
             return redirect()->back()->withErrors($dispatcher->error);
         }
 
-        return redirect()->action('Front\Admin\UserController@getDispatchers');
+        return redirect()->action('Front\Admin\UserController@getDispatchers')->withSuccess('Dispatcher deleted successfully');
     }
 
     public function getDeleteDriver($id)
@@ -126,7 +126,7 @@ class UserController extends Controller
             return redirect()->back()->withErrors($driver->error);
         }
 
-        return redirect()->action('Front\Admin\UserController@getDrivers');
+        return redirect()->action('Front\Admin\UserController@getDrivers')->withSuccess('Driver deleted successfully');
     }
 
     public function postEditAdmin(Request $request, $id)
@@ -136,18 +136,49 @@ class UserController extends Controller
             return redirect()->back()->withErrors($admin->error);
         }
 
-        return redirect()->action('Front\Admin\UserController@getAdmins');
+        return redirect()->action('Front\Admin\UserController@getAdmins')->withSuccess('Admin updated successfully');
+    }
+
+    public function postEditDriver(Request $request, $id)
+    {
+        $admin = $this->API->call(API::admin_users . "/{$id}", 'PUT', $request->all());
+        if ($admin->status_code != 200) {
+            return redirect()->back()->withErrors($admin->error);
+        }
+
+        return redirect()->action('Front\Admin\UserController@getDrivers')->withSuccess('Driver updated successfully');
+    }
+
+    public function postEditDispatcher(Request $request, $id)
+    {
+        $admin = $this->API->call(API::admin_users . "/{$id}", 'PUT', $request->all());
+        if ($admin->status_code != 200) {
+            return redirect()->back()->withErrors($admin->error);
+        }
+
+        return redirect()->action('Front\Admin\UserController@getDispatchers')->withSuccess('Dispatcher updated successfully');
     }
 
     public function postCreateAdmin(Request $request)
     {
-        $admin = $this->API->call(API::admin_admins, 'POST', $request->all());
+        $admin = $this->API->call(API::admin_admins_list, 'POST', $request->all());
 
         if ($admin->status_code != 201) {
             return redirect()->back()->withErrors($admin->error);
         }
 
-        return redirect()->action('Front\Admin\UserController@getAdmins');
+        return redirect()->action('Front\Admin\UserController@getAdmins')->withSuccess('Admin created successfully');
+    }
+
+    public function postCreateDispatcher(Request $request)
+    {
+        $admin = $this->API->call(API::admin_dispatchers_list, 'POST', $request->all());
+
+        if ($admin->status_code != 201) {
+            return redirect()->back()->withErrors($admin->error);
+        }
+
+        return redirect()->action('Front\Admin\UserController@getDispatchers')->withSuccess('Dispatcher created successfully');
     }
 
     public function postCreateDriver(Request $request)
@@ -159,7 +190,7 @@ class UserController extends Controller
             return redirect()->back()->withErrors($admin->error);
         }
 
-        return redirect()->action('Front\Admin\UserController@getDrivers');
+        return redirect()->action('Front\Admin\UserController@getDrivers')->withSuccess('Driver created successfully');
     }
 
 }

@@ -68,6 +68,7 @@ class OrdersController extends ApiController
     {
         $order = $this->user->createOrder(['status' => 0] + $request->all());
         $order->load('statusHistory');
+        $order->assignNearestDriver();
 
         return $this->jsonRespond->respondModelStore($this->orderTransformer, $order);
     }

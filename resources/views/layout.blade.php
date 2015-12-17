@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TAXI</title>
     <link href="{{asset('css/libs.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('css/main.css')}}" rel="stylesheet" type="text/css">
@@ -38,12 +40,12 @@
     </nav>
 @endif
 <div class="container">
-    @include('partials.errors')
     @yield('content')
 </div>
 
 <script type="text/javascript" src="{{asset('js/libs.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/main.js')}}"></script>
+@include('partials.alerts')
 @yield('js')
 </body>
 </html>

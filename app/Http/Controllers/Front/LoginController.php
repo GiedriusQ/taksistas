@@ -43,7 +43,7 @@ class LoginController extends Controller
                 'user'     => $response->data
             ]);
 
-            return redirect()->to('/frontend')->withSuccess('Logged in successfully');
+            return redirect()->to('/frontend/home/home')->withSuccess('Logged in successfully');
         }
 
         return redirect()->back()->withErrors([$response->error->message]);
@@ -59,7 +59,7 @@ class LoginController extends Controller
         $request->session()->forget('email');
         $request->session()->forget('password');
 
-        return redirect()->to('frontend');
+        return redirect()->to('frontend/login/login')->withSuccess('Logged out successfully');
     }
 
 }

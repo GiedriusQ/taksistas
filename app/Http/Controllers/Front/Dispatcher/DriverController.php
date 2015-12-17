@@ -62,7 +62,7 @@ class DriverController extends Controller
             return redirect()->back()->withErrors($order->error);
         }
 
-        return redirect()->action('Front\Dispatcher\DriverController@getDrivers');
+        return redirect()->action('Front\Dispatcher\DriverController@getDrivers')->withSuccess('Driver created successfully');
     }
 
     public function getEditDriver($id)
@@ -83,7 +83,7 @@ class DriverController extends Controller
             return redirect()->back()->withErrors($order->error);
         }
 
-        return redirect()->action('Front\Dispatcher\DriverController@getDrivers');
+        return redirect()->action('Front\Dispatcher\DriverController@getDrivers')->withSuccess('Driver updated successfully');
     }
 
     public function getDeleteDriver($id)
@@ -93,6 +93,6 @@ class DriverController extends Controller
             return redirect()->back()->withErrors($order->error);
         }
 
-        return redirect()->action('Front\Dispatcher\DriverController@getDrivers');
+        return redirect()->action('Front\Dispatcher\DriverController@getDrivers')->withSuccess('Driver deleted successfully');
     }
 }

@@ -26,6 +26,7 @@ class API
     const dispatcher_drivers = self::base_url . '/api/dispatcher/drivers';
 
     const driver_orders = self::base_url . '/api/driver/orders';
+    const driver_locations = self::base_url . '/api/driver/locations';
 
     private $client;
 

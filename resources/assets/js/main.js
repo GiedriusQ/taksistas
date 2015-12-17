@@ -1,19 +1,22 @@
-/*$(function () {
-    $('#click').click(function () {
-        $.ajax({
-                type      : "POST",
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader ("Authorization", "Basic " + btoa('pHermann@Steuber.com' + ":" + 'test123'));
-                },
-                url       : '{{url('api/dispatcher/user')}}',
-            data      : {},
-        success   : function (data) {
-            console.log(data);
+function swal_success(title, text) {
+    swal(title, text, "success")
+}
+
+function swal_error(title, text) {
+    swal(title, text, "error")
+}
+
+function swal_delete(title, text, button) {
+    swal({
+            title             : title,
+            text : text,
+            type : "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText : button,
+            closeOnConfirm    : true
         },
-        error     : function (data) {
-            console.log(data);
-        },
-        dataType  : "JSON"
-    });
-    });
-});*/
+        function () {
+            //swal("Deleted!", "Your imaginary file has been deleted.", "success");
+        });
+}

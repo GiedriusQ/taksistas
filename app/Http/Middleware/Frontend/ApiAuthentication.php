@@ -29,7 +29,7 @@ class ApiAuthentication
         if (!$request->session()->has('email') || !$request->session()->has('password')) {
             $request->session()->forget('user');
 
-            return redirect()->action('Front\LoginController@getLogin');
+            return redirect()->action('Front\LoginController@getLogin')->withErrors(['You are not authenticated!']);
         }
         $response = $this->API->checkCrediantials();
         if ($response->status_code != '200') {

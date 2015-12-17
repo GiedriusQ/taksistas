@@ -31,7 +31,7 @@ class UserRequest extends CustomResponse
             'name'     => 'required|min:3|max:60|unique:users,name,' . $this->id,
             'city'     => 'required|min:3|max:60',
             'email'    => 'required|email|max:255|unique:users,email,' . $this->id,
-            'password' => 'sometimes|min:6'
+            'password' => (strcasecmp($this->method(), 'POST') == 0 ? 'required' : 'sometimes') . '|min:6'
         ];
     }
 }

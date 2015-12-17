@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\GK\Utilities\Bing;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -87,8 +88,6 @@ class User extends Model implements AuthenticatableContract,
 
     protected $casts = ['id' => 'int', 'type' => 'int'];
 
-    public $timestamps = false;
-
     public function dispatcher()
     {
         return $this->belongsTo('App\User', 'parent_id');
@@ -128,6 +127,11 @@ class User extends Model implements AuthenticatableContract,
         return $this->type == 1;
     }
 
+    public function is_driver()
+    {
+        return $this->type == 2;
+    }
+
     public function owns($id)
     {
         return $id == null || $this->drivers()->whereId($id)->exists() || $this->dispatcher()->whereId($id)->exists() || $this->is_admin() || $this->id == $id;
@@ -162,6 +166,9 @@ class User extends Model implements AuthenticatableContract,
 
     public function setPasswordAttribute($value)
     {
+        if (strlen($value) < 3) {
+            return;
+        }
         $this->attributes['password'] = Hash::needsRehash($value) ? bcrypt($value) : $value;
     }
 
@@ -200,6 +207,35 @@ class User extends Model implements AuthenticatableContract,
     public function createOrder(array $attributes = [])
     {
         return $this->orders()->create($attributes);
+    }
+
+    public function assignNearestOrderIfAvailable()
+    {
+        if (!$this->is_driver()) {
+            return;
+        }
+        if ($this->orders()->where('status', '!=', '2')->count() > 0) {
+            return;
+        }
+        $orders    = $this->dispatcher->orders()->whereStatus(0)->whereDriverId(null)->get();
+        $min_order = 0;
+        $min_dist  = 0;
+        if (count($orders) == 0 || !$this->locations()->exists()) {
+            return;
+        }
+        foreach ($orders as $order) {
+            $dist = Bing::distanceBetweenTwoPoints($this->locations[0]->lat,
+                $this->locations[0]->lng, $order->lat, $order->lng);
+            if ($min_dist > $dist) {
+                $min_dist  = $dist;
+                $min_order = $order;
+            }
+            if (!$min_order instanceof Order && $min_order == 0) {
+                $min_order = $order;
+                $min_dist  = $dist;
+            }
+        }
+        $this->orders()->save($min_order);
     }
 
 }

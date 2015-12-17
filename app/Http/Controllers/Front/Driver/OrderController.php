@@ -66,6 +66,6 @@ class OrderController extends Controller
             return redirect()->back()->withErrors($order->error);
         }
 
-        return redirect()->action('Front\Driver\OrderController@getOrders');
+        return redirect()->action('Front\Driver\OrderController@getOrders')->withSuccess('Order updated successfully');
     }
 }

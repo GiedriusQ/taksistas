@@ -27,20 +27,20 @@ class AdminApiTest extends ApiTestCase
         $admins_now = $admins->paginator->total;
 
         //create 10 more admins
-        $admins = $this->createAdmins(10);
+        $adminsx = $this->createAdmins(10);
 
         $admins = $this->getJson('api/admin/users/admins/detailed');
         $this->assertResponseOk();
         $this->assertObjectHasAttribute('data', $admins);
         $this->assertObjectHasAttribute('paginator', $admins);
         $this->assertEquals($admins_now + 10, $admins->paginator->total);
-
         //check object attribute values
-        $this->assertAttributeEquals($this->admin->id, 'id', $admins->data[0]);
-        $this->assertAttributeEquals($this->admin->role, 'role', $admins->data[0]);
-        $this->assertAttributeEquals($this->admin->email, 'email', $admins->data[0]);
-        $this->assertAttributeEquals($this->admin->name, 'name', $admins->data[0]);
-        $this->assertAttributeEquals($this->admin->city, 'city', $admins->data[0]);
+        $first_in_list = $adminsx->sortByDesc('created_at')[0];
+        $this->assertAttributeEquals($first_in_list->id, 'id', $admins->data[0]);
+        $this->assertAttributeEquals($first_in_list->role, 'role', $admins->data[0]);
+        $this->assertAttributeEquals($first_in_list->email, 'email', $admins->data[0]);
+        $this->assertAttributeEquals($first_in_list->name, 'name', $admins->data[0]);
+        $this->assertAttributeEquals($first_in_list->city, 'city', $admins->data[0]);
     }
 
     /** @test */

@@ -65,7 +65,7 @@ class OrderController extends Controller
             return redirect()->back()->withErrors($order->error);
         }
 
-        return redirect()->action('Front\Dispatcher\OrderController@getOrders');
+        return redirect()->action('Front\Dispatcher\OrderController@getOrders')->withSuccess('Order created successfully');
     }
 
     public function getEditOrder($id)
@@ -89,7 +89,7 @@ class OrderController extends Controller
             return redirect()->back()->withErrors($order->error);
         }
 
-        return redirect()->action('Front\Dispatcher\OrderController@getOrders');
+        return redirect()->action('Front\Dispatcher\OrderController@getOrders')->withSuccess('Order updated successfully');
     }
 
     public function getDeleteOrder($id)
@@ -99,6 +99,6 @@ class OrderController extends Controller
             return redirect()->back()->withErrors($order->error);
         }
 
-        return redirect()->action('Front\Dispatcher\OrderController@getOrders');
+        return redirect()->action('Front\Dispatcher\OrderController@getOrders')->withSuccess('Order deleted successfully');
     }
 }

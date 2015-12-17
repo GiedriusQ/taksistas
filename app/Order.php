@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\GK\Utilities\Bing;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
@@ -52,13 +53,31 @@ class Order extends Model
      *
      * @var array
      */
-    protected $fillable = ['from', 'to', 'client', 'driver_id', 'status'];
+    protected $fillable = [
+        'from',
+        'to',
+        'client',
+        'driver_id',
+        'status',
+        'lat',
+        'lng',
+        'destination_lat',
+        'destination_lng'
+    ];
 
-    protected $hidden = ['lat', 'lng', 'destination_lat', 'destination_lng'];
+//    protected $hidden = [];
 
     protected $appends = ['status_str', 'added_at', 'created_at_readable'];
 
-    protected $casts = ['driver_id' => 'int', 'dispatcher_id' => 'int', 'id' => 'int'];
+    protected $casts = [
+        'driver_id'       => 'int',
+        'dispatcher_id'   => 'int',
+        'id'              => 'int',
+        'lat'             => 'double',
+        'lng'             => 'double',
+        'destination_lat' => 'double',
+        'destination_lng' => 'double'
+    ];
 
     public function dispatcher()
     {
@@ -89,4 +108,28 @@ class Order extends Model
         return $this->statusHistory()->create(['user_id' => $user_id, 'status' => $status]);
     }
 
+    public function assignNearestDriver()
+    {
+        $drivers  = $this->dispatcher->drivers()->whereHas('orders', function ($q) {
+            $q->where('status', '!=', 2);
+        }, '=', 0)->has('locations')->get();
+        $min_user = 0;
+        $min_dist = 0;
+        if (count($drivers) == 0) {
+            return;
+        }
+        foreach ($drivers as $driver) {
+            $dist = Bing::distanceBetweenTwoPoints($driver->locations[0]->lat,
+                $driver->locations[0]->lng, $this->lat, $this->lng);
+            if ($min_dist > $dist) {
+                $min_dist = $dist;
+                $min_user = $driver;
+            }
+            if ($min_user == 0) {
+                $min_user = $driver;
+                $min_dist = $dist;
+            }
+        }
+        $this->driver()->associate($min_user);
+    }
 }

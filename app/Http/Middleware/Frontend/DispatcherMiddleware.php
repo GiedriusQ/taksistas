@@ -16,10 +16,10 @@ class DispatcherMiddleware
     public function handle($request, Closure $next)
     {
         if (!$request->session()->has('user')) {
-            return redirect()->action('Front\LoginController@getLogin');
+            return redirect()->action('Front\LoginController@getLogin')->withErrors(['You are not authenticated!']);
         }
         if ($request->session()->get('user')->type != 1) {
-            return redirect()->action('Front\LoginController@getLogin');
+            return redirect()->action('Front\LoginController@getLogin')->withErrors(['You are not dispatcher!']);
         }
 
         return $next($request);

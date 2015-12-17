@@ -28,10 +28,13 @@ class OrderRequest extends CustomResponse
         $this->id = $this->route('order') ? $this->route('order')->id : null;
 
         return [
-            'client'    => 'required|min:3|max:100',
-            'from'      => 'required|min:3|max:150',
-            'to'        => 'sometimes|min:3|max:150',
-            'driver_id' => 'sometimes|exists:users,id,type,2'
+            'client'          => 'required|min:3|max:100',
+            'from'            => 'required|min:3|max:150',
+            'to'              => 'required|min:3|max:150',
+            'lat'             => 'required|numeric',
+            'lng'             => 'required|numeric',
+            'destination_lat' => 'required|numeric',
+            'destination_lng' => 'required|numeric'
         ];
     }
 }

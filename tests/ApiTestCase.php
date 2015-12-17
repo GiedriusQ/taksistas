@@ -21,6 +21,15 @@ class ApiTestCase extends TestCase
         return json_decode($this->get($url, $headers)->response->getContent());
     }
 
+    protected function deleteJson($url)
+    {
+        $headers = [
+            'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode($this->email . ':' . self::password)
+        ];
+
+        return json_decode($this->delete($url, [], $headers)->response->getContent());
+    }
+
     protected function postJson($url, $data)
     {
         $headers = [

@@ -37,6 +37,7 @@ class OrdersController extends ApiController
     public function update(UpdateOrderRequest $request, Order $order)
     {
         $order->update($request->all());
+        $this->user->assignNearestOrderIfAvailable();
 
         return $this->jsonRespond->respondModel($this->orderTransformer, $order);
     }

@@ -54,6 +54,7 @@ Route::group(['prefix' => 'frontend'], function () {
         });
         Route::group(['middleware' => 'frontend.driver', 'prefix' => 'driver'], function () {
             Route::controller('order', 'Front\Driver\OrderController');
+            Route::controller('location', 'Front\Driver\LocationController');
         });
     });
 });
