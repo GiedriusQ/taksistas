@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\API\Dispatcher;
 
-use App\Http\Requests\OrderRequest;
 use App\Order;
 use App\Http\Requests;
 use App\GK\Json\JsonRespond;
 use Illuminate\Auth\AuthManager;
-use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use App\GK\Transformers\OrderTransformer;
+use App\Http\Requests\Dispatcher\OrderRequest;
 
 class OrdersController extends ApiController
 {

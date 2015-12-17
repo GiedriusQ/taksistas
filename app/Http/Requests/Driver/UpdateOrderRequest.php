@@ -3,19 +3,17 @@
 namespace App\Http\Requests\Driver;
 
 use App\Http\Requests\CustomResponse;
-use Illuminate\Auth\AuthManager;
 
 class UpdateOrderRequest extends CustomResponse
 {
     /**
      * Determine if the user is authorized to make this request.
      *
-     * @param AuthManager $auth
      * @return bool
      */
-    public function authorize(AuthManager $auth)
+    public function authorize()
     {
-        return $auth->user()->ownsOrder($this->route('orders'));
+        return $this->user()->ownsOrder($this->route('orders'));
     }
 
     /**
@@ -27,7 +25,7 @@ class UpdateOrderRequest extends CustomResponse
     {
         return [
             'status' => 'required|in:0,1,2',
-            'to'     => 'required|min:3|max:150'
+            'to'     => 'sometimes|required|min:3|max:150'
         ];
     }
 }

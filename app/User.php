@@ -130,14 +130,14 @@ class User extends Model implements AuthenticatableContract,
 
     public function owns($id)
     {
-        return $this->drivers()->whereId($id)->exists() || $this->dispatcher()->whereId($id)->exists() || $this->is_admin() || $this->id == $id;
+        return $id == null || $this->drivers()->whereId($id)->exists() || $this->dispatcher()->whereId($id)->exists() || $this->is_admin() || $this->id == $id;
     }
 
     public function ownsOrder($order)
     {
         $id = $order instanceof Model ? $order->id : $order;
 
-        return $this->orders()->whereId($id)->whereDriverId($this->id)->exists() || $this->orders()->whereId($id)->whereDispatcherId($this->id)->exists();
+        return $id == null || $this->orders()->whereId($id)->whereDriverId($this->id)->exists() || $this->orders()->whereId($id)->whereDispatcherId($this->id)->exists();
     }
 
     public function scopeIsAdmin($query)

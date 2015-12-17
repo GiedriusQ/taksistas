@@ -5,16 +5,15 @@ namespace App\Http\Controllers\API;
 use Auth;
 use App\Http\Requests;
 use App\GK\Json\JsonRespond;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\GK\Transformers\UserTransformer;
-use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
 
     private $jsonRespond;
     private $transformer;
-    private $auth;
 
     /**
      * LoginController constructor.

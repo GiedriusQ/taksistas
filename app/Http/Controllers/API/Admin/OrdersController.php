@@ -46,8 +46,6 @@ class OrdersController extends ApiController
      */
     public function show(Order $order)
     {
-        $data = $this->orderTransformer->transformModel($order);
-
-        return $this->jsonRespond->respondWithData($data);
+        return $this->jsonRespond->respondModel($this->orderTransformer, $order);
     }
 }

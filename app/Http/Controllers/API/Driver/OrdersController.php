@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\API\Driver;
 
+use App\Order;
+use App\Http\Requests;
 use App\GK\Json\JsonRespond;
+use Illuminate\Auth\AuthManager;
+use App\Http\Controllers\ApiController;
 use App\GK\Transformers\OrderTransformer;
 use App\Http\Requests\Driver\UpdateOrderRequest;
-use App\Order;
-use Illuminate\Auth\AuthManager;
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\ApiController;
 
 class OrdersController extends ApiController
 {

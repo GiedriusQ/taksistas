@@ -7,13 +7,18 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class DriverApiTest extends ApiTestCase
 {
     use DatabaseMigrations;
+    private $driver;
+
+    public function init()
+    {
+        //create driver
+        $this->driver = $this->driver();
+    }
 
     /** @test */
     public function it_fetches_0_order()
     {
-        //create driver
-        $driver = $this->driver();
-
+        $this->init();
         $orders = $this->getJson('api/driver/orders');
         $this->assertResponseOk();
         $this->assertObjectHasAttribute('paginator', $orders);
@@ -25,36 +30,33 @@ class DriverApiTest extends ApiTestCase
     /** @test */
     public function it_fetches_10_orders_and_check_attributes()
     {
-        //create driver
-        $driver = $this->driver();
-
+        $this->init();
         //create 10 orders
-        $orders = $this->createOrders($driver, 10);
+        $orders = $this->createOrders($this->driver, 10);
 
         $json = $this->getJson('api/driver/orders');
         $this->assertResponseOk();
         $this->assertObjectHasAttribute('paginator', $json);
         $this->assertObjectHasAttribute('data', $json);
         $this->assertEquals(10, $json->paginator->total);
-        $this->assertEquals(10, count($json->data));
+        $this->assertCount(10, $json->data);
 
         //check object attribute values
-        $this->assertAttributeEquals($orders[0]->id, 'id', $json->data[0]);
-        $this->assertAttributeEquals($orders[0]->from, 'take_from', $json->data[0]);
-        $this->assertAttributeEquals($orders[0]->to, 'transport_to', $json->data[0]);
-        $this->assertAttributeEquals($orders[0]->client, 'client', $json->data[0]);
-        $this->assertAttributeEquals($orders[0]->created_at, 'created_at', $json->data[0]);
+        $first_order = $orders->sortByDesc('created_at')->first();
+        $this->assertAttributeEquals($first_order->id, 'id', $json->data[0]);
+        $this->assertAttributeEquals($first_order->from, 'take_from', $json->data[0]);
+        $this->assertAttributeEquals($first_order->to, 'transport_to', $json->data[0]);
+        $this->assertAttributeEquals($first_order->client, 'client', $json->data[0]);
+        $this->assertAttributeEquals($first_order->created_at, 'created_at', $json->data[0]);
     }
 
     /** @test */
     public function it_adds_and_checks_order_status()
     {
-        //create driver
-        $driver = $this->driver();
-
-        $order     = $this->createOrders($driver);
-        $locations = $this->postJson('api/driver/orders/' . $order->id . '/statuses', ['status' => 2]);
-        $this->assertResponseStatus(201);
+        $this->init();
+        $order     = $this->createOrders($this->driver);
+        $locations = $this->putJson('api/driver/orders/' . $order->id, ['status' => 2]);
+        $this->assertResponseOk();
 
         $locations = $this->getJson('api/driver/orders/' . $order->id);
         $this->assertResponseOk();
@@ -65,9 +67,7 @@ class DriverApiTest extends ApiTestCase
     /** @test */
     public function it_adds_and_checks_driver_location()
     {
-        //create driver
-        $driver = $this->driver();
-
+        $this->init();
         $locations = $this->getJson('api/driver/locations');
 
         $this->assertResponseOk();

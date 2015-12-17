@@ -7,8 +7,7 @@ use App\Http\Requests;
 use App\GK\Json\JsonRespond;
 use App\Http\Controllers\ApiController;
 use App\GK\Transformers\UserTransformer;
-use App\Http\Requests\Admin\StoreUserRequest;
-use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Http\Requests\Admin\AdminRequest;
 
 class DispatcherDriversController extends ApiController
 {
@@ -45,11 +44,11 @@ class DispatcherDriversController extends ApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreUserRequest $request
+     * @param AdminRequest $request
      * @param User $dispatcher
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreUserRequest $request, User $dispatcher)
+    public function store(AdminRequest $request, User $dispatcher)
     {
         $driver = $dispatcher->createDriverForDispatcher($request->all());
 
@@ -71,12 +70,12 @@ class DispatcherDriversController extends ApiController
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateUserRequest $request
+     * @param AdminRequest $request
      * @param User $dispatcher
      * @param User $driver
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateUserRequest $request, User $dispatcher, User $driver)
+    public function update(AdminRequest $request, User $dispatcher, User $driver)
     {
         $driver->update($request->all());
 

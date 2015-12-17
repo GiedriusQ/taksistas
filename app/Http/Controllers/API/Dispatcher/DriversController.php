@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers\API\Dispatcher;
 
-use App\GK\Json\JsonRespond;
-use App\GK\Transformers\UserTransformer;
-use App\Http\Requests\Dispatcher\StoreUserRequest;
-use App\Http\Requests\Dispatcher\UpdateUserRequest;
 use App\User;
-use Illuminate\Auth\AuthManager;
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
+use App\GK\Json\JsonRespond;
+use Illuminate\Auth\AuthManager;
 use App\Http\Controllers\ApiController;
+use App\GK\Transformers\UserTransformer;
+use App\Http\Requests\Dispatcher\UserRequest;
 
 class DriversController extends ApiController
 {
@@ -53,10 +50,10 @@ class DriversController extends ApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreUserRequest $request
+     * @param UserRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreUserRequest $request)
+    public function store(UserRequest $request)
     {
         $driver = $this->user->createDriverForDispatcher($request->all());
 
@@ -77,11 +74,11 @@ class DriversController extends ApiController
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateUserRequest $request
+     * @param UserRequest $request
      * @param User $driver
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateUserRequest $request, User $driver)
+    public function update(UserRequest $request, User $driver)
     {
         $driver->update($request->all());
 

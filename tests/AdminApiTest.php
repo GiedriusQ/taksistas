@@ -7,16 +7,20 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class AdminApiTest extends ApiTestCase
 {
     use DatabaseMigrations;
+    private $admin;
+
+    public function init()
+    {
+        //create main admin
+        $this->admin = $this->createAdmins();
+        $this->loginAs($this->admin);
+    }
 
     /** @test */
     public function it_fetches_admins_and_count_them()
     {
-        //create main admin
-        $admin = $this->createAdmins();
-
-        $this->loginAs($admin);
-
-        $admins = $this->getJson('api/admin/users/admins');
+        $this->init();
+        $admins = $this->getJson('api/admin/users/admins/detailed');
         $this->assertResponseOk();
         $this->assertObjectHasAttribute('data', $admins);
         $this->assertObjectHasAttribute('paginator', $admins);
@@ -25,27 +29,24 @@ class AdminApiTest extends ApiTestCase
         //create 10 more admins
         $admins = $this->createAdmins(10);
 
-        $admins = $this->getJson('api/admin/users/admins');
+        $admins = $this->getJson('api/admin/users/admins/detailed');
         $this->assertResponseOk();
         $this->assertObjectHasAttribute('data', $admins);
         $this->assertObjectHasAttribute('paginator', $admins);
         $this->assertEquals($admins_now + 10, $admins->paginator->total);
 
         //check object attribute values
-        $this->assertAttributeEquals($admin->id, 'id', $admins->data[0]);
-        $this->assertAttributeEquals($admin->role, 'role', $admins->data[0]);
-        $this->assertAttributeEquals($admin->email, 'email', $admins->data[0]);
-        $this->assertAttributeEquals($admin->name, 'name', $admins->data[0]);
-        $this->assertAttributeEquals($admin->city, 'city', $admins->data[0]);
+        $this->assertAttributeEquals($this->admin->id, 'id', $admins->data[0]);
+        $this->assertAttributeEquals($this->admin->role, 'role', $admins->data[0]);
+        $this->assertAttributeEquals($this->admin->email, 'email', $admins->data[0]);
+        $this->assertAttributeEquals($this->admin->name, 'name', $admins->data[0]);
+        $this->assertAttributeEquals($this->admin->city, 'city', $admins->data[0]);
     }
 
     /** @test */
     public function it_adds_new_admin()
     {
-        //create main admin
-        $admin = $this->createAdmins();
-
-        $this->loginAs($admin);
+        $this->init();
         $admins = $this->postJson('api/admin/users/admins',
             ['name' => 'Demo test', 'city' => 'Kaunas', 'email' => 'foo@bar.com', 'password' => 'longpassword']);
         $this->assertResponseStatus(201);
@@ -64,12 +65,8 @@ class AdminApiTest extends ApiTestCase
     /** @test */
     public function it_fetches_dispatchers_and_count_them()
     {
-        //create main admin
-        $admin = $this->createAdmins();
-
-        $this->loginAs($admin);
-
-        $dispatchers = $this->getJson('api/admin/users/dispatchers');
+        $this->init();
+        $dispatchers = $this->getJson('api/admin/users/dispatchers/detailed');
         $this->assertResponseOk();
         $this->assertObjectHasAttribute('data', $dispatchers);
         $this->assertObjectHasAttribute('paginator', $dispatchers);
@@ -79,7 +76,7 @@ class AdminApiTest extends ApiTestCase
         $dispatchers = $this->createDispatchers(10);
         $dispatcher  = $dispatchers[0];
 
-        $dispatchers = $this->getJson('api/admin/users/dispatchers');
+        $dispatchers = $this->getJson('api/admin/users/dispatchers/detailed');
         $this->assertResponseOk();
         $this->assertObjectHasAttribute('data', $dispatchers);
         $this->assertObjectHasAttribute('paginator', $dispatchers);
@@ -96,10 +93,7 @@ class AdminApiTest extends ApiTestCase
     /** @test */
     public function it_adds_new_dispatcher()
     {
-        //create main admin
-        $admin = $this->createAdmins();
-
-        $this->loginAs($admin);
+        $this->init();
         $dispatcher = $this->postJson('api/admin/users/dispatchers',
             [
                 'name'     => 'Demo test dispatcher',
@@ -119,19 +113,4 @@ class AdminApiTest extends ApiTestCase
         //check if row actually exists in database
         $this->seeInDatabase('users', ['name' => 'Demo test dispatcher', 'city' => 'Kaunas', 'email' => 'foo@bar.com']);
     }
-
-    protected function driver()
-    {
-        //make 1 driver
-        $driver = $this->makeDrivers();
-        //create 1 dispatcher
-        $dispatcher = $this->createDispatchers();
-        //attache driver to dispatcher
-        $dispatcher->drivers()->save($driver);
-        //login as driver
-        $this->loginAs($driver);
-
-        return $driver;
-    }
-
 }

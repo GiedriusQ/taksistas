@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Dispatcher;
 
-use App\Http\Requests\Request;
+use App\Http\Requests\CustomResponse;
 
 class OrderRequest extends CustomResponse
 {
+    private $id;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +15,7 @@ class OrderRequest extends CustomResponse
      */
     public function authorize()
     {
-        return $this->user()->is_dispatcher();
+        return $this->user()->is_dispatcher() && $this->user()->ownsOrder($this->id);
     }
 
     /**
@@ -23,6 +25,8 @@ class OrderRequest extends CustomResponse
      */
     public function rules()
     {
+        $this->id = $this->route('order') ? $this->route('order')->id : null;
+
         return [
             'client'    => 'required|min:3|max:100',
             'from'      => 'required|min:3|max:150',

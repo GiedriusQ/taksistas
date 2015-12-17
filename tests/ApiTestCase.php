@@ -30,6 +30,15 @@ class ApiTestCase extends TestCase
         return json_decode($this->post($url, $data, $headers)->response->getContent());
     }
 
+    protected function putJson($url, $data)
+    {
+        $headers = [
+            'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode($this->email . ':' . self::password)
+        ];
+
+        return json_decode($this->put($url, $data, $headers)->response->getContent());
+    }
+
     protected function makeDrivers($number = 1)
     {
         return factory(App\User::class, $number)->make(['type' => '2', 'password' => self::password]);

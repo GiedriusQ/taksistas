@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
+
+use App\Http\Requests\CustomResponse;
 
 class AdminRequest extends CustomResponse
 {
@@ -10,8 +12,7 @@ class AdminRequest extends CustomResponse
      */
     public function authorize()
     {
-        //Admin is authorized to update/store everything.
-        return true;
+        return $this->user()->is_admin();
     }
 
     /**
@@ -21,7 +22,7 @@ class AdminRequest extends CustomResponse
      */
     public function rules()
     {
-        $id = $this->route('users') ? $this->route('users')->id : null;
+        $id = $this->route('users') ? $this->route('users')->id : ($this->route('drivers') ? $this->route('users')->id : null);
 
         return [
             'name'     => 'required|min:3|max:60|unique:users,name,' . $id,

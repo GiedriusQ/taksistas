@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\API\Admin;
 
-use App\GK\Transformers\UserListTransformer;
 use App\User;
 use App\Http\Requests;
 use App\GK\Json\JsonRespond;
-use App\Http\Requests\AdminRequest;
 use App\Http\Controllers\ApiController;
 use App\GK\Transformers\UserTransformer;
+use App\Http\Requests\Admin\AdminRequest;
+use App\GK\Transformers\UserListTransformer;
 
 class UsersController extends ApiController
 {
@@ -136,7 +136,7 @@ class UsersController extends ApiController
     /**
      * Display the specified user.
      *
-     * @param User $admin
+     * @param User $users
      * @return \Illuminate\Http\Response
      */
     public function show(User $users)

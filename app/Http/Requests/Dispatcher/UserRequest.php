@@ -3,21 +3,19 @@
 namespace App\Http\Requests\Dispatcher;
 
 use App\Http\Requests\CustomResponse;
-use Illuminate\Auth\AuthManager;
 
-class UpdateUserRequest extends CustomResponse
+class UserRequest extends CustomResponse
 {
     private $id;
 
     /**
      * Determine if the user is authorized to make this request.
      *
-     * @param AuthManager $auth
      * @return bool
      */
-    public function authorize(AuthManager $auth)
+    public function authorize()
     {
-        return $auth->user()->owns($this->id);
+        return $this->user()->owns($this->id);
     }
 
     /**
@@ -27,10 +25,10 @@ class UpdateUserRequest extends CustomResponse
      */
     public function rules()
     {
-        $this->id = $this->route('drivers')->id;
+        $this->id = $this->route('drivers') ? $this->route('drivers')->id : null;
 
         return [
-            'name'     => 'required|min:3|max:60|unique:users,name,' . $this->id . '',
+            'name'     => 'required|min:3|max:60|unique:users,name,' . $this->id,
             'city'     => 'required|min:3|max:60',
             'email'    => 'required|email|max:255|unique:users,email,' . $this->id,
             'password' => 'sometimes|min:6'
