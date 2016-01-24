@@ -1,4 +1,8 @@
 body {
     padding-top: 80px;
 }
+
+.pointer {
+    cursor: pointer;
+}
 /*# sourceMappingURL=main.css.map */

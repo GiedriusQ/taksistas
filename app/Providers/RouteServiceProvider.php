@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Game;
 use App\User;
 use App\Order;
 use Exception;
@@ -33,17 +34,7 @@ class RouteServiceProvider extends ServiceProvider
         $throwModelNotFound = function () {
             throw new ModelNotFoundException;
         };
-        $router->model('admins', User::class, $throwModelNotFound);
-        $router->model('users', User::class, $throwModelNotFound);
-        $router->model('dispatchers', User::class, $throwModelNotFound);
-        $router->model('drivers', User::class, $throwModelNotFound);
-        $router->bind('orders', function ($id) {
-            try {
-                return Order::with('statusHistory')->findOrFail($id);
-            } catch (Exception $e) {
-                $this->throwModelNotFound();
-            }
-        });
+        $router->model('game', Game::class, $throwModelNotFound);
     }
 
     /**

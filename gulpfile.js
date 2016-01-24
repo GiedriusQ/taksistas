@@ -12,11 +12,11 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function (mix) {
-    mix.phpUnit();
-    //mix.sass('app.scss', 'resources/assets/css/libs.css');
-    //mix.scripts(['jquery.js', 'bootstrap.js', 'sweetalert.min.js'], 'public/js/libs.js');
-    //mix.styles(['libs.css', 'sweetalert.css'], 'public/css/libs.css');
-    //mix.styles(['main.css'], 'public/css/main.css');
-    //mix.scripts(['main.js'], 'public/js/main.js');
-    //mix.copy('resources/assets/fonts', 'public/fonts');
+    //mix.phpUnit();
+    mix.sass('app.scss', 'resources/assets/css/libs.css');
+    mix.scripts(['jquery.js', 'bootstrap.js', 'sweetalert.min.js', 'roundedRect.js', 'checkers.js'], 'public/js/libs.js');
+    mix.styles(['libs.css', 'sweetalert.css'], 'public/css/libs.css');
+    mix.styles(['main.css'], 'public/css/main.css');
+    mix.scripts(['main.js'], 'public/js/main.js');
+    mix.copy('resources/assets/fonts', 'public/fonts');
 });

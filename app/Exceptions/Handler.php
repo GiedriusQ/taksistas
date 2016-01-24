@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 class Handler extends ExceptionHandler
@@ -71,6 +72,9 @@ class Handler extends ExceptionHandler
         }
         if ($e instanceof MethodNotAllowedHttpException) {
             return $this->jsonRespond->setStatusCode(405)->respondWithError('Method not allowed!');
+        }
+        if ($e instanceof UnprocessableEntityHttpException) {
+            return $this->jsonRespond->setStatusCode(422)->respondWithError($e);
         }
 
         return parent::render($request, $e);

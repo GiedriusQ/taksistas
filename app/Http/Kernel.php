@@ -26,17 +26,6 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth.basic'      => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'auth.basic.once' => \App\Http\Middleware\AuthenticateOnceWithBasicAuth::class,
-        'admin'           => \App\Http\Middleware\AdminMiddleware::class,
-        'driver'          => \App\Http\Middleware\DriverMiddleware::class,
-        'dispatcher'      => \App\Http\Middleware\DispatcherMiddleware::class,
-        'guest'           => \App\Http\Middleware\RedirectIfAuthenticated::class,
-
-        'frontend.auth'       => \App\Http\Middleware\Frontend\ApiAuthentication::class,
-        'frontend.admin'      => \App\Http\Middleware\Frontend\AdminMiddleware::class,
-        'frontend.dispatcher' => \App\Http\Middleware\Frontend\DispatcherMiddleware::class,
-        'frontend.driver'     => \App\Http\Middleware\Frontend\DriverMiddleware::class,
-        'frontend.guest'      => \App\Http\Middleware\Frontend\RedirectIfAuthenticated::class,
+        'api_key' => \App\Http\Middleware\ApiKey::class,
     ];
 }

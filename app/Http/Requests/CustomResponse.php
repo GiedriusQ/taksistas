@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\GK\Json\JsonRespond;
+use App\Liustr\Json\JsonRespond;
 
 class CustomResponse extends Request
 {
